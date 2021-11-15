@@ -29,6 +29,16 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   google_fonts: ^2.1.0
+  flutter_svg: ^0.22.0
+  flutter_barcode_scanner: ^2.0.0
+  firebase_core: ^1.4.0
+  firebase_auth: ^3.0.1
+  cloud_firestore: ^2.4.0
+  flutter_bloc: ^7.1.0
+  equatable: ^2.0.3
+  bloc: ^7.0.0
+  flutter_easyloading: ^3.0.0
+  shared_preferences: ^2.0.8
 
 dev_dependencies:
   flutter_test:
@@ -45,9 +55,12 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/vector/
+    - assets/images/
+    - assets/icons/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

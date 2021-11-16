@@ -49,4 +49,9 @@ class AuthRepo {
     final _pref = await SharedPreferences.getInstance();
     return _pref.getString(BaseString.token) != null;
   }
+
+  static Future<String> getToken()async{
+    final _pref = await SharedPreferences.getInstance();
+    return _pref.getString(BaseString.token)!;
+  }
 }

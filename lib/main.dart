@@ -8,6 +8,8 @@ import 'package:pamsimas/bloc/sign_in/sign_in_cubit.dart';
 import 'package:pamsimas/helpers/base_string.dart';
 import 'package:pamsimas/helpers/routes.dart';
 
+import 'bloc/get_profile/get_profile_cubit.dart';
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -21,6 +23,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_)=>AuthCubit()),
         BlocProvider(create: (_)=>SignInCubit()),
+        BlocProvider(create: (_)=>GetProfileCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

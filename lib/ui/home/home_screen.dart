@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pamsimas/bloc/auth/auth_cubit.dart';
+import 'package:pamsimas/bloc/get_profile/get_profile_cubit.dart';
 import 'package:pamsimas/helpers/base_color.dart';
 import 'package:pamsimas/helpers/base_string.dart';
 import 'package:pamsimas/helpers/routes.dart';
@@ -19,6 +20,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Size _size;
   late List<HomeModel> _list;
+  String? _name = '';
+  String? _role = '';
 
   Future<void> _scanQr()async{
     try{
@@ -32,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    context.read<GetProfileCubit>().fetchProfile();
     _list = [
       HomeModel(
         onTap: ()=>Navigator.pushNamed(context, rHome),
@@ -59,6 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
+    _name = context.select<GetProfileCubit,String>((value) => value.state is GetProfileSuccess?(value.state as GetProfileSuccess).data!.name!:'');
+    _role = context.select<GetProfileCubit,String>((value) => value.state is GetProfileSuccess?(value.state as GetProfileSuccess).data!.role!:'');
     return Scaffold(
       body: BlocListener<AuthCubit,AuthState>(
         listener: (context,state){
@@ -121,8 +127,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Halo! Admin',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-                        Text('Admin',)
+                        Text('Halo! $_name',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                        Text(_role!)
                       ],
                     ),
                     GridView.builder(

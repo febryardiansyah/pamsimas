@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:pamsimas/helpers/base_string.dart';
 import 'package:pamsimas/repositories/auth_repo.dart';
 
 part 'auth_state.dart';
@@ -32,8 +33,15 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void>loggedOut()async{
-    await _repo.deleteToken();
-    await _repo.signOut();
-    emit(AuthUnAuthenticated());
+    emit(LogOutLoading());
+    try{
+      await _repo.deleteToken();
+      await _repo.signOut();
+      Future.delayed(Duration(seconds: 2));
+      emit(AuthUnAuthenticated());
+    }catch(e){
+      print(e);
+      emit(LogOutFailure(msg: BaseString.errorMessage));
+    }
   }
 }

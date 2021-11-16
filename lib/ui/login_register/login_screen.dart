@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormField(
                       controller: _email,
                       decoration: InputDecoration(
-                        hintText: 'Email'
+                        hintText: 'Username'
                       ),
                     ),
                     TextFormField(

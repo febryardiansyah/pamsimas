@@ -5,3 +5,9 @@ abstract class AuthState {}
 class AuthInitial extends AuthState {}
 class AuthAuthenticated extends AuthState {}
 class AuthUnAuthenticated extends AuthState {}
+class LogOutLoading extends AuthState {}
+class LogOutFailure extends AuthState {
+  final String? msg;
+
+  LogOutFailure({this.msg});
+}

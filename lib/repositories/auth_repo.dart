@@ -18,7 +18,7 @@ class AuthRepo {
     }
 
     try{
-      UserCredential _userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential _userCredential = await _auth.signInWithEmailAndPassword(email: '$email@pampay.com', password: password);
       User _user = _userCredential.user!;
 
       print(_user.uid);

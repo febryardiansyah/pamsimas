@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,14 +20,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Size _size;
-  late List<HomeModel> _list;
+  late List<HomeModel> _adminMenuList;
+  late List<HomeModel> _userMenuList;
   String? _name = '';
   String? _role = '';
+  String? _uid = '';
 
-  Future<void> _scanQr()async{
+  Future<void> _scanQr(BuildContext context)async{
     try{
-      await FlutterBarcodeScanner.scanBarcode(
+      final _res = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(_res);
+      Navigator.pushNamed(context, rScanResult,arguments: _res);
     }catch(e){
       print(e);
     }
@@ -36,13 +41,35 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     context.read<GetProfileCubit>().fetchProfile();
-    _list = [
+    _userMenuList = [
       HomeModel(
         onTap: ()=>Navigator.pushNamed(context, rHome),
         title: 'Cek Tagihan',color: Colors.lightBlue,icon: BaseString.iInvoice,
       ),
       HomeModel(
-        onTap: _scanQr,
+        onTap: (){
+
+        },
+        title: 'Input Meteran',color: Colors.lightBlue,icon: BaseString.iMeter,
+      ),
+      HomeModel(
+        onTap: ()=>Navigator.pushNamed(context, rHome),
+        title: 'Cek Data',color: Colors.lightBlue,icon: BaseString.iData,
+      ),
+      HomeModel(
+        onTap: ()=>Navigator.pushNamed(context, rHome),
+        title: 'Bantuan',color: Colors.lightBlue,icon: BaseString.iTelephone,
+      ),
+    ];
+    _adminMenuList = [
+      HomeModel(
+        onTap: ()=>Navigator.pushNamed(context, rHome),
+        title: 'Cek Tagihan',color: Colors.lightBlue,icon: BaseString.iInvoice,
+      ),
+      HomeModel(
+        onTap: (){
+          _scanQr(context);
+        },
         title: 'Scan',color: Colors.lightBlue,icon: BaseString.iBarcode,
       ),
       HomeModel(
@@ -65,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _size = MediaQuery.of(context).size;
     _name = context.select<GetProfileCubit,String>((value) => value.state is GetProfileSuccess?(value.state as GetProfileSuccess).data!.name!:'');
     _role = context.select<GetProfileCubit,String>((value) => value.state is GetProfileSuccess?(value.state as GetProfileSuccess).data!.role!:'');
+    _uid = context.select<GetProfileCubit,String>((value) => value.state is GetProfileSuccess?(value.state as GetProfileSuccess).data!.uid!:'');
     return Scaffold(
       body: BlocListener<AuthCubit,AuthState>(
         listener: (context,state){
@@ -72,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
             EasyLoading.show(status: 'Tunggu sebentar');
           }
           if (state is LogOutFailure) {
+            EasyLoading.dismiss();
             EasyLoading.showError(state.msg!);
           }
           if (state is AuthUnAuthenticated) {
@@ -131,15 +160,70 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(_role!)
                       ],
                     ),
+                    _role == 'Admin'?Center():
+                        Column(
+                          children: [
+                            Container(
+                              width: _size.width,
+                              padding: EdgeInsets.symmetric(vertical: 8,horizontal: 15),
+                              margin: EdgeInsets.only(top: 10),
+                              decoration: BoxDecoration(
+                                color: BaseColor.lightBlue.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Tagihan bulan ini'),
+                                      SizedBox(height: 8,),
+                                      Text('Rp.50.000',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),),
+                                    ],
+                                  ),
+                                  SvgPicture.asset(BaseString.iWaterTap)
+                                ],
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.pushNamed(context, rQrCode,arguments: _uid);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(top: 10),
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                width: _size.width,
+                                decoration: BoxDecoration(
+                                  color: BaseColor.lightBlue,
+                                  borderRadius: BorderRadius.circular(8)
+                                ),
+                                child: Center(
+                                  child: Row(
+                                    children: [
+                                      Text('Tampilkan QrCode',style: TextStyle(color: BaseColor.white,fontWeight: FontWeight.bold),),
+                                      Spacer(),
+                                      IconButton(
+                                        onPressed: (){},
+                                        icon: SvgPicture.asset(BaseString.iBarcode),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                     GridView.builder(
                       shrinkWrap: true,
-                      itemCount: _list.length,
+                      itemCount: _role == 'Admin'?_adminMenuList.length:_userMenuList.length,
                       physics: NeverScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,crossAxisSpacing: 30,mainAxisSpacing: 5,childAspectRatio: 1
                       ),
                       itemBuilder: (context,i){
-                        final _item = _list[i];
+                        final _item = _role == 'Admin' ?_adminMenuList[i]:_userMenuList[i];
                         return GestureDetector(
                           onTap: _item.onTap,
                           child: Card(

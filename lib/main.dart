@@ -9,6 +9,7 @@ import 'package:pamsimas/helpers/base_string.dart';
 import 'package:pamsimas/helpers/routes.dart';
 
 import 'bloc/get_profile/get_profile_cubit.dart';
+import 'bloc/get_user_by_uid/get_user_by_uid_cubit.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_)=>AuthCubit()),
         BlocProvider(create: (_)=>SignInCubit()),
         BlocProvider(create: (_)=>GetProfileCubit()),
+        BlocProvider(create: (_)=>GetUserByUidCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

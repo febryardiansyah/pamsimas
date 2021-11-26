@@ -5,7 +5,7 @@ abstract class GetProfileState {}
 class GetProfileInitial extends GetProfileState {}
 class GetProfileLoading extends GetProfileState {}
 class GetProfileSuccess extends GetProfileState {
-  final ProfileModel? data;
+  final UserModel? data;
 
   GetProfileSuccess({this.data});
 }

@@ -10,6 +10,8 @@ class BaseString {
   static String iInvoice = "assets/icons/invoice.svg";
   static String iTelephone = "assets/icons/telephone.svg";
   static String iAddUser = "assets/icons/addUser.svg";
+  static String iMeter = "assets/icons/meter.svg";
+  static String iWaterTap = "assets/icons/water-tap.svg";
 
   static String token = "token";
 }

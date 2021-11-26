@@ -3,6 +3,8 @@ import 'package:pamsimas/splash_screen.dart';
 import 'package:pamsimas/ui/home/home_screen.dart';
 import 'package:pamsimas/ui/index.dart';
 import 'package:pamsimas/ui/login_register/login_screen.dart';
+import 'package:pamsimas/ui/qr_code/qr_code_screen.dart';
+import 'package:pamsimas/ui/qr_code/scan_result_screen.dart';
 
 MaterialPageRoute _pageRoute({required RouteSettings settings,required Widget body})=>MaterialPageRoute(
   builder: (_) => body,
@@ -25,6 +27,12 @@ Route? generateRoute(RouteSettings settings){
     case rIndex:
       _route = _pageRoute(settings: settings, body: IndexPage());
       break;
+    case rQrCode:
+      _route = _pageRoute(settings: settings, body: QrCodeScreen(uid: _args as String,));
+      break;
+    case rScanResult:
+      _route = _pageRoute(settings: settings, body: ScanResultScreen(uid: _args as String,));
+      break;
   }
   return _route;
 }
@@ -33,3 +41,5 @@ const String rSplash = '/splash';
 const String rLogin = '/login';
 const String rHome = '/home';
 const String rIndex = '/index';
+const String rQrCode = '/qrCode';
+const String rScanResult = '/scanResult';

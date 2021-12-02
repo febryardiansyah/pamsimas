@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pamsimas/splash_screen.dart';
+import 'package:pamsimas/ui/add_customer/add_customer_screen.dart';
 import 'package:pamsimas/ui/home/home_screen.dart';
 import 'package:pamsimas/ui/index.dart';
 import 'package:pamsimas/ui/login_register/login_screen.dart';
@@ -33,6 +34,9 @@ Route? generateRoute(RouteSettings settings){
     case rScanResult:
       _route = _pageRoute(settings: settings, body: ScanResultScreen(uid: _args as String,));
       break;
+    case rAddCustomer:
+      _route = _pageRoute(settings: settings, body: AddCustomerScreen());
+      break;
   }
   return _route;
 }
@@ -43,3 +47,4 @@ const String rHome = '/home';
 const String rIndex = '/index';
 const String rQrCode = '/qrCode';
 const String rScanResult = '/scanResult';
+const String rAddCustomer = '/addCustomer';

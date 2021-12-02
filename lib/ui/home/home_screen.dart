@@ -77,11 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: 'Cek Data',color: Colors.lightBlue,icon: BaseString.iData,
       ),
       HomeModel(
-        onTap: ()=>Navigator.pushNamed(context, rHome),
-        title: 'Bantuan',color: Colors.lightBlue,icon: BaseString.iTelephone,
-      ),
-      HomeModel(
-        onTap: ()=>Navigator.pushNamed(context, rHome),
+        onTap: ()=>Navigator.pushNamed(context, rAddCustomer),
         title: 'Tambah Pengguna',color: Colors.lightBlue,icon: BaseString.iAddUser,
       ),
     ];
@@ -130,7 +126,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 left: 15,
                 right: 15,
               ),
-              child: SingleChildScrollView(
+              child: _role ==''?Center(
+                child: CupertinoActivityIndicator(),
+              ): SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

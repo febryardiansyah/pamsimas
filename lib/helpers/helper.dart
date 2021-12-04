@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 class Helper{
   static String? getAuthErr(String errorCode){
     String? _msg;
+    print(errorCode);
     switch(errorCode){
       case 'user-not-found':
         _msg = 'Pengguna tidak ditemukan';
@@ -13,8 +14,11 @@ class Helper{
       case 'wrong-password':
         _msg  = 'Password salah';
         break;
+      case 'email-already-in-use':
+        _msg = 'Gunakan nama lain';
+        break;
       default:
-        _msg = 'Gagal login';
+        _msg = 'Terjadi kesalahan';
         break;
     }
 

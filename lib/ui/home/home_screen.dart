@@ -96,7 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
             EasyLoading.show(status: 'Tunggu sebentar');
           }
           if (state is LogOutFailure) {
-            EasyLoading.dismiss();
             EasyLoading.showError(state.msg!);
           }
           if (state is AuthUnAuthenticated) {
@@ -126,9 +125,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 left: 15,
                 right: 15,
               ),
-              child: _role ==''?Center(
-                child: CupertinoActivityIndicator(),
-              ): SingleChildScrollView(
+              child:
+              _role ==''?Center(child: CupertinoActivityIndicator(),):
+              SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -155,7 +154,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Halo! $_name',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-                        Text(_role!)
+                        SizedBox(height: 8,),
+                        RichText(
+                          text: TextSpan(
+                            text: _role,
+                            style: TextStyle(color: Colors.black),
+                            children: [
+                              TextSpan(
+                                text: ' ($_uid) ',
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ]
+                          ),
+                        )
                       ],
                     ),
                     _role == 'Admin'?Center():

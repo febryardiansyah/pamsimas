@@ -43,18 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<GetProfileCubit>().fetchProfile();
     _userMenuList = [
       HomeModel(
-        onTap: ()=>Navigator.pushNamed(context, rHome),
+        onTap: ()=>Navigator.pushNamed(context, rCheckBill),
         title: 'Cek Tagihan',color: Colors.lightBlue,icon: BaseString.iInvoice,
-      ),
-      HomeModel(
-        onTap: (){
-
-        },
-        title: 'Input Meteran',color: Colors.lightBlue,icon: BaseString.iMeter,
-      ),
-      HomeModel(
-        onTap: ()=>Navigator.pushNamed(context, rHome),
-        title: 'Cek Data',color: Colors.lightBlue,icon: BaseString.iData,
       ),
       HomeModel(
         onTap: ()=>Navigator.pushNamed(context, rHome),

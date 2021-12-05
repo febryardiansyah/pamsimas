@@ -6,6 +6,7 @@ class AuthInitial extends AuthState {}
 class AuthAuthenticated extends AuthState {}
 class AuthUnAuthenticated extends AuthState {}
 class LogOutLoading extends AuthState {}
+class LogOutSuccess extends AuthState {}
 class LogOutFailure extends AuthState {
   final String? msg;
 

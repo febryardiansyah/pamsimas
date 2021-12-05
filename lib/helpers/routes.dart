@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pamsimas/splash_screen.dart';
+import 'package:pamsimas/ui/check_bill/check_bill_screen.dart';
 import 'package:pamsimas/ui/create_user/create_user_screen.dart';
 import 'package:pamsimas/ui/home/home_screen.dart';
 import 'package:pamsimas/ui/index.dart';
@@ -37,6 +38,9 @@ Route? generateRoute(RouteSettings settings){
     case rAddCustomer:
       _route = _pageRoute(settings: settings, body: CreateUserScreen());
       break;
+    case rCheckBill:
+      _route = _pageRoute(settings: settings, body: CheckBillScreen());
+      break;
   }
   return _route;
 }
@@ -48,3 +52,4 @@ const String rIndex = '/index';
 const String rQrCode = '/qrCode';
 const String rScanResult = '/scanResult';
 const String rAddCustomer = '/addCustomer';
+const String rCheckBill = '/checkBill';

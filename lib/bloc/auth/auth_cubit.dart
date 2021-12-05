@@ -38,6 +38,7 @@ class AuthCubit extends Cubit<AuthState> {
       await _repo.deleteToken();
       await _repo.signOut();
       Future.delayed(Duration(seconds: 2));
+      emit(LogOutSuccess());
       emit(AuthUnAuthenticated());
     }catch(e){
       print(e);

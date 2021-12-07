@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pamsimas/helpers/helper.dart';
 import 'package:pamsimas/model/ResponseModel.dart';
+import 'package:pamsimas/model/history_model.dart';
 
 class UserRepo{
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
@@ -36,6 +37,42 @@ class UserRepo{
       return ResponseModel(
         status: true,msg: 'Berhasil ditambahkan',
         data: null
+      );
+    }on FirebaseException catch(e){
+      print(e);
+      return ResponseModel(
+        status: false,msg: Helper.getAuthErr(e.code),data: null
+      );
+    }
+  }
+
+  Future<ResponseModel> inputUserBill({required String uid,required int currentBill,required String month,required String year,})async{
+    try{
+      final _billData = BillModel(
+          currentBill: currentBill,month: month,isPayed: false,year: year
+      );
+      await _fireStore.collection('users').doc(uid).update({
+        'currentBill':currentBill,'month':month,'isPayed':false,'year':year,
+      });
+      final _ref = _fireStore.collection('history').doc(uid);
+      _ref.get().then((value)async{
+        if (value.data() == null) {
+          await _fireStore.collection('history').doc(uid).set({
+            'uid':uid,
+            'bills':FieldValue.arrayUnion([_billData.toMap()]),
+          });
+        } else {
+          List _list = await value.data()!['bills'];
+          _list.add(_billData.toMap());
+          await _fireStore.collection('history').doc(uid).set({
+            'uid':uid,
+            'bills':FieldValue.arrayUnion(_list),
+          });
+        }
+      });
+
+      return ResponseModel(
+        status: true,msg: 'Berhasil',data: null,
       );
     }on FirebaseException catch(e){
       print(e);

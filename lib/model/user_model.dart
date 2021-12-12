@@ -1,15 +1,14 @@
+import 'package:pamsimas/model/history_model.dart';
+
 class UserModel{
   String? uid;
   String? address;
   String? category;
   String? name;
   String? role;
-  int? currentBill;
-  String? month;
-  bool? isPayed;
-  String? year;
+  BillModel? bill;
 
-  UserModel({this.uid, this.address, this.category, this.name, this.role,this.month,this.currentBill,this.isPayed,this.year});
+  UserModel({this.uid, this.address, this.category, this.name, this.role,this.bill});
 
   factory UserModel.fromMap(Map<String,dynamic>json){
     return UserModel(
@@ -18,10 +17,7 @@ class UserModel{
       category: json['category'],
       role: json['role'],
       uid: json['uid'],
-      currentBill: json['currentBill'] == null?null:json['currentBill'],
-      month: json['month'] == null?null:json['month'],
-      isPayed: json['isPayed'] == null?null:json['isPayed'],
-      year: json['year'] == null?null:json['year'],
+      bill: json['bill'] == null?null:BillModel.fromMap(json['bill']),
     );
   }
 
@@ -31,9 +27,5 @@ class UserModel{
     'address':address,
     'category':category,
     'role':role,
-    'currentBill':currentBill,
-    'month':month,
-    'isPayed':isPayed,
-    'year':year,
   };
 }

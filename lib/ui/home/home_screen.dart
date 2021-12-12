@@ -7,9 +7,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pamsimas/bloc/auth/auth_cubit.dart';
 import 'package:pamsimas/bloc/get_profile/get_profile_cubit.dart';
+import 'package:pamsimas/components/build_payed_status.dart';
 import 'package:pamsimas/helpers/base_color.dart';
 import 'package:pamsimas/helpers/base_string.dart';
 import 'package:pamsimas/helpers/routes.dart';
+import 'package:pamsimas/model/history_model.dart';
+import 'package:pamsimas/model/user_model.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -22,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late Size _size;
   late List<HomeModel> _adminMenuList;
   late List<HomeModel> _userMenuList;
+  UserModel? _userProfile;
   String? _name = '';
   String? _role = '';
   String? _uid = '';
@@ -79,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _name = context.select<GetProfileCubit,String>((value) => value.state is GetProfileSuccess?(value.state as GetProfileSuccess).data!.name!:'');
     _role = context.select<GetProfileCubit,String>((value) => value.state is GetProfileSuccess?(value.state as GetProfileSuccess).data!.role!:'');
     _uid = context.select<GetProfileCubit,String>((value) => value.state is GetProfileSuccess?(value.state as GetProfileSuccess).data!.uid!:'');
+    _userProfile = context.select<GetProfileCubit,UserModel>((value) => value.state is GetProfileSuccess?(value.state as GetProfileSuccess).data!:UserModel());
     return Scaffold(
       body: BlocListener<AuthCubit,AuthState>(
         listener: (context,state){
@@ -151,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: TextStyle(color: Colors.black),
                             children: [
                               TextSpan(
-                                text: ' ($_uid) ',
+                                text: ' (${_userProfile?.uid}) ',
                                 style: TextStyle(color: Colors.grey),
                               )
                             ]
@@ -162,36 +167,45 @@ class _HomeScreenState extends State<HomeScreen> {
                     _role == 'Admin'?Center():
                         Column(
                           children: [
+                            SizedBox(height: 20,),
                             Container(
                               width: _size.width,
-                              padding: EdgeInsets.symmetric(vertical: 8,horizontal: 15),
-                              margin: EdgeInsets.only(top: 10),
+                              padding: EdgeInsets.symmetric(vertical: 10,horizontal: 15),
                               decoration: BoxDecoration(
-                                color: BaseColor.lightBlue.withOpacity(0.5),
+                                color: BaseColor.lightBlue.withOpacity(0.3),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              child: Column(
                                 children: [
-                                  Column(
+                                  Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
-                                      Text('Tagihan bulan ini'),
-                                      SizedBox(height: 8,),
-                                      Text('Rp.50.000',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Tagihan bulan ini'),
+                                          SizedBox(height: 8,),
+                                          Text(_userProfile?.bill == null?'Masih Kosong':_userProfile!.bill!.currentBill.toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),),
+                                        ],
+                                      ),
+                                      SvgPicture.asset(BaseString.iWaterTap)
                                     ],
                                   ),
-                                  SvgPicture.asset(BaseString.iWaterTap)
+                                  SizedBox(height: 15,),
+                                  _userProfile?.bill == null?Center():Align(
+                                    alignment: Alignment.center,
+                                    child: BuildPayedStatus(isPayed: _userProfile!.bill!.isPayed!,),
+                                  ),
                                 ],
                               ),
                             ),
+                            SizedBox(height: 20,),
                             GestureDetector(
                               onTap: (){
                                 Navigator.pushNamed(context, rQrCode,arguments: _uid);
                               },
                               child: Container(
-                                margin: EdgeInsets.only(top: 10),
                                 padding: EdgeInsets.symmetric(horizontal: 8),
                                 width: _size.width,
                                 decoration: BoxDecoration(

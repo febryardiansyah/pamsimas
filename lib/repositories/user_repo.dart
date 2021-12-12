@@ -52,7 +52,9 @@ class UserRepo{
           currentBill: currentBill,month: month,isPayed: false,year: year
       );
       await _fireStore.collection('users').doc(uid).update({
-        'currentBill':currentBill,'month':month,'isPayed':false,'year':year,
+        'bill':{
+          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,
+        }
       });
       final _ref = _fireStore.collection('history').doc(uid);
       _ref.get().then((value)async{

@@ -22,8 +22,9 @@ class BillModel {
   String? month;
   bool? isPayed;
   String? year;
+  String? usage;
 
-  BillModel({this.currentBill, this.month, this.isPayed,this.year});
+  BillModel({this.currentBill, this.month, this.isPayed,this.year,this.usage});
 
   factory BillModel.fromMap(Map<String,dynamic>json){
     return BillModel(
@@ -31,6 +32,7 @@ class BillModel {
       month: json['month'] == null?null:json['month'],
       isPayed: json['isPayed'] == null?null:json['isPayed'],
       year: json['year'] == null?null:json['year'],
+      usage: json['usage'] == null?null:json['usage']
     );
   }
 
@@ -39,5 +41,6 @@ class BillModel {
     'month':month,
     'isPayed':isPayed,
     'year':year,
+    'usage':usage
   };
 }

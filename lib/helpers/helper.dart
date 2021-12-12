@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 class Helper{
   static String? getAuthErr(String errorCode){
@@ -25,4 +26,9 @@ class Helper{
     return _msg;
   }
   static void requestFocusNode(BuildContext context)=>FocusScope.of(context).requestFocus(FocusNode());
+
+  static String formatCurrency(int number){
+    final _formatCurrency = new NumberFormat.simpleCurrency(locale: 'id_ID');
+    return _formatCurrency.format(number);
+  }
 }

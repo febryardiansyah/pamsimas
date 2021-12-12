@@ -9,6 +9,7 @@ import 'package:pamsimas/bloc/input_user_bill/input_user_bill_cubit.dart';
 import 'package:pamsimas/components/build_category.dart';
 import 'package:pamsimas/helpers/base_color.dart';
 import 'package:pamsimas/helpers/base_string.dart';
+import 'package:pamsimas/helpers/helper.dart';
 
 class ScanResultScreen extends StatefulWidget {
   final String? uid;
@@ -23,10 +24,12 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
   late Size _size;
   String? _selectedMonth;
   String _category = '';
+  bool _isLastBillManual = false;
+  final _lastBillCtrl = TextEditingController();
   DateTime _currentDate = DateTime.now();
-  String? _currentYear;
+  TextEditingController _currentYear = TextEditingController();
   List<String> _monthList = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-  final _inputCtrl = TextEditingController();
+  TextEditingController _inputCtrl = TextEditingController();
   int _lastBill = 700;
   int _totalBill = 0;
 
@@ -90,7 +93,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                             children: [
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   CircleAvatar(),
                                   SizedBox(width: 8,),
@@ -102,20 +105,42 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                       Text('Meteran Lalu : 700'),
                                     ],
                                   ),
+                                  Spacer(),
                                   BuildCategory(category: _category,)
                                 ],
                               ),
                               SizedBox(height: 8,),
                               Divider(),
+                              // SwitchListTile(
+                              //   title: Text('Meteran bulan lalu'),
+                              //   value: _isLastBillManual,
+                              //   activeColor: BaseColor.lightBlue,
+                              //   onChanged: (val){
+                              //     setState(() {
+                              //       _isLastBillManual = val;
+                              //     });
+                              //   },
+                              // ),
+                              // !_isLastBillManual?Center():
+                              // TextFormField(
+                              //   controller: _lastBillCtrl,
+                              //   keyboardType: TextInputType.number,
+                              //   decoration: InputDecoration(
+                              //     hintText: 'Input meteran',
+                              //     label: Text('Meteran bulan lalu'),
+                              //   ),
+                              // ),
+                              SizedBox(height: 10,),
                               SizedBox(height: 8,),
                               TextFormField(
                                 controller: _inputCtrl,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                     hintText: 'Input Meteran',
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8)
-                                    )
+                                    label: Text('Meter Sekarang')
+                                    // border: OutlineInputBorder(
+                                    //     borderRadius: BorderRadius.circular(8)
+                                    // )
                                 ),
                               ),
                               SizedBox(height: 20,),
@@ -139,30 +164,27 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                 )).toList(),
                               ),
                               SizedBox(height: 20,),
-                              GestureDetector(
+                              TextFormField(
+                                controller: _currentYear,
+                                decoration: InputDecoration(
+                                  hintText: 'Tahun',
+                                  label: Text('Tahun')
+                                ),
                                 onTap: (){
+                                  Helper.requestFocusNode(context);
                                   _showYearPicker();
                                 },
-                                child: Container(
-                                  width: _size.width,
-                                  child: Text(_currentYear == null ?'Tahun':_currentYear!),
-                                  padding: EdgeInsets.all(20),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(width: 1,color: BaseColor.grey),
-                                    borderRadius: BorderRadius.circular(8)
-                                  ),
-                                ),
                               ),
                               SizedBox(height: 30,),
                               GestureDetector(
-                                onTap: (){
+                                onTap:_inputCtrl.text.isEmpty || _selectedMonth == null || _currentYear.text.isEmpty?null: (){
                                   int _bill = _calculateBill();
-                                  context.read<InputUserBillCubit>().inputBill(uid: widget.uid!, currentBill: _bill, month: _selectedMonth!,year: _currentYear!);
+                                  _showCalculationResult(_bill);
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
                                   width: _size.width,
-                                  child: Center(child: Text('Input',style: TextStyle(fontWeight: FontWeight.bold,color: BaseColor.white,fontSize: 15),)),
+                                  child: Center(child: Text('Hitung Tagihan',style: TextStyle(fontWeight: FontWeight.bold,color: BaseColor.white,fontSize: 15),)),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       color: BaseColor.green
@@ -170,7 +192,6 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('Total Tagihanmu :\t$_totalBill'),
                             ],
                           ),
                         ),
@@ -216,6 +237,39 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
     return _bill;
   }
 
+  void _showCalculationResult(int bill){
+    showDialog(context: context, builder: (context)=>AlertDialog(
+      title: Text('Konfirmasi tagihan'),
+      content: Text('${Helper.formatCurrency(_totalBill)}',style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+      actions: [
+        ElevatedButton(
+          child: Text('Input',style: GoogleFonts.roboto(color: BaseColor.white),),
+          onPressed: (){
+            Navigator.pop(context);
+            context.read<InputUserBillCubit>().inputBill(
+              uid: widget.uid!, currentBill: bill, month: _selectedMonth!,year: _currentYear.text,
+              usage: _inputCtrl.text
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            primary: BaseColor.green,
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            elevation: 0
+          ),
+        ),
+        ElevatedButton(
+          child: Text('Batal',style: GoogleFonts.roboto(color: BaseColor.white),),
+          onPressed: ()=>Navigator.pop(context),
+          style: ElevatedButton.styleFrom(
+              primary: BaseColor.red,
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              elevation: 0
+          ),
+        ),
+      ],
+    ));
+  }
+
   void _showYearPicker(){
     showDialog(context: context, builder: (context)=>StatefulBuilder(
       builder:(context,myState) => AlertDialog(
@@ -235,7 +289,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                 _currentDate = val;
               });
               setState(() {
-                _currentYear = _year;
+                _currentYear.text = _year;
               });
               Navigator.pop(context);
             },

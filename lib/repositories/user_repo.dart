@@ -46,14 +46,14 @@ class UserRepo{
     }
   }
 
-  Future<ResponseModel> inputUserBill({required String uid,required int currentBill,required String month,required String year,})async{
+  Future<ResponseModel> inputUserBill({required String uid,required int currentBill,required String month,required String year,required String usage})async{
     try{
       final _billData = BillModel(
-          currentBill: currentBill,month: month,isPayed: false,year: year
+          currentBill: currentBill,month: month,isPayed: false,year: year,usage: usage
       );
       await _fireStore.collection('users').doc(uid).update({
         'bill':{
-          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,
+          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,'usage':usage
         }
       });
       final _ref = _fireStore.collection('history').doc(uid);

@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: 'Scan',color: Colors.lightBlue,icon: BaseString.iBarcode,
       ),
       HomeModel(
-        onTap: ()=>Navigator.pushNamed(context, rHome),
+        onTap: ()=>Navigator.pushNamed(context, rCheckData),
         title: 'Cek Data',color: Colors.lightBlue,icon: BaseString.iData,
       ),
       HomeModel(

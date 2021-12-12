@@ -10,6 +10,7 @@ import 'package:pamsimas/bloc/sign_in/sign_in_cubit.dart';
 import 'package:pamsimas/helpers/base_string.dart';
 import 'package:pamsimas/helpers/routes.dart';
 
+import 'bloc/get_data/get_data_cubit.dart';
 import 'bloc/get_profile/get_profile_cubit.dart';
 import 'bloc/get_user_by_uid/get_user_by_uid_cubit.dart';
 
@@ -30,15 +31,15 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_)=>GetUserByUidCubit()),
         BlocProvider(create: (_)=>CreateUserCubit()),
         BlocProvider(create: (_)=>InputUserBillCubit()),
+        BlocProvider(create: (_)=>GetDataCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: BaseString.appName,
         theme: ThemeData(
           primarySwatch: Colors.blue,
-          textTheme: TextTheme(
-            button: GoogleFonts.josefinSans(),
-            // body1: GoogleFonts.josefinSans(),
+          textTheme: GoogleFonts.poppinsTextTheme(
+            Theme.of(context).textTheme,
           )
         ),
         builder: EasyLoading.init(),

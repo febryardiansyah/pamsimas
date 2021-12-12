@@ -84,6 +84,26 @@ class UserRepo{
     }
   }
 
+  Future<ResponseModel> searchUser({required int limit,String? query,bool? status,String? category})async{
+    try{
+      final _res = await _fireStore.collection('users')
+          .limit(limit)
+          .where('name',isGreaterThanOrEqualTo: query)
+          .where('bill.isPayed',isEqualTo: status)
+          .where('category',isEqualTo: category)
+          .get();
+      // print(_res.docs[0].data());
+      return ResponseModel(
+        msg: 'Pencarian berhasil',data: _res.docs,status: true
+      );
+    }on FirebaseException catch(e){
+      print(e);
+      return ResponseModel(
+        status: false,data: null,msg: Helper.getAuthErr(e.code)
+      );
+    }
+  }
+
   Future<bool> _checkName(String name)async{
     final _res = await _fireStore.collection('users').where('name',isEqualTo: name).get();
     return _res.docs.isNotEmpty;

@@ -31,7 +31,7 @@ class BuildCategory extends StatelessWidget {
         break;
     }
     return Container(
-      child: Text(category,style: TextStyle(fontSize: 12,color: BaseColor.white),),
+      child: Center(child: Text(category,style: TextStyle(fontSize: 12,color: BaseColor.white),)),
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: _color,

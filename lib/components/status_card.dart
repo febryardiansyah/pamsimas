@@ -24,7 +24,7 @@ class StatusCard extends StatelessWidget {
             begin: Alignment.centerRight,
             end: Alignment.centerLeft,
             colors: [
-              _isPayed?BaseColor.green.withOpacity(0.5):BaseColor.red.withOpacity(0.5),
+              _isPayed?BaseColor.green.withOpacity(0.3):BaseColor.red.withOpacity(0.5),
               BaseColor.white,
               BaseColor.white
             ],

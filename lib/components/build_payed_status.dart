@@ -10,7 +10,7 @@ class BuildPayedStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       isPayed ? 'Sudah Bayar':'Belum Bayar',
-      style: TextStyle(color: isPayed?BaseColor.green:BaseColor.red,fontSize: 17),
+      style: TextStyle(color: isPayed?BaseColor.greenDeep:BaseColor.red,fontSize: 17),
     );
   }
 }

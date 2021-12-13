@@ -7,5 +7,6 @@ class BaseColor {
   static Color white = Color(0xffFFFFFF);
   static Color red = Color(0xffED4040);
   static Color green = Color(0xff70D981);
+  static Color greenDeep = Color(0xff27B04D);
   static Color grey = Color(0xff808080);
 }

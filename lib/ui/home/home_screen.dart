@@ -10,6 +10,7 @@ import 'package:pamsimas/bloc/get_profile/get_profile_cubit.dart';
 import 'package:pamsimas/components/build_payed_status.dart';
 import 'package:pamsimas/helpers/base_color.dart';
 import 'package:pamsimas/helpers/base_string.dart';
+import 'package:pamsimas/helpers/helper.dart';
 import 'package:pamsimas/helpers/routes.dart';
 import 'package:pamsimas/model/history_model.dart';
 import 'package:pamsimas/model/user_model.dart';
@@ -168,36 +169,62 @@ class _HomeScreenState extends State<HomeScreen> {
                         Column(
                           children: [
                             SizedBox(height: 20,),
-                            Container(
-                              width: _size.width,
-                              padding: EdgeInsets.symmetric(vertical: 10,horizontal: 15),
-                              decoration: BoxDecoration(
-                                color: BaseColor.lightBlue.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(8),
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)
                               ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Column(
+                              elevation: 4,
+                              child: Container(
+                                width: _size.width,
+                                decoration: BoxDecoration(
+                                  color: BaseColor.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text('Tagihan bulan ini'),
-                                          SizedBox(height: 8,),
-                                          Text(_userProfile?.bill == null?'Masih Kosong':_userProfile!.bill!.currentBill.toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Tagihan bulan ini'),
+                                              SizedBox(height: 8,),
+                                              Text(_userProfile?.bill == null?'Masih Kosong':Helper.formatCurrency(_userProfile!.bill!.currentBill!),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),),
+                                            ],
+                                          ),
+                                          Spacer(),
+                                          SvgPicture.asset(BaseString.iWaterTap)
                                         ],
                                       ),
-                                      SvgPicture.asset(BaseString.iWaterTap)
-                                    ],
-                                  ),
-                                  SizedBox(height: 15,),
-                                  _userProfile?.bill == null?Center():Align(
-                                    alignment: Alignment.center,
-                                    child: BuildPayedStatus(isPayed: _userProfile!.bill!.isPayed!,),
-                                  ),
-                                ],
+                                    ),
+                                    SizedBox(height: 15,),
+                                    _userProfile?.bill == null?Center():Container(
+                                      width: _size.width,
+                                      padding: EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                                        color: BaseColor.lightBlue.withOpacity(0.5),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            child: Text(_userProfile!.bill!.isPayed!?'Sudah Bayar':'Belum Bayar',style: TextStyle(color: BaseColor.white),),
+                                            padding: EdgeInsets.symmetric(vertical: 8,horizontal: 10),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(8),
+                                              color: _userProfile!.bill!.isPayed!?BaseColor.greenDeep:BaseColor.red
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Text('${_userProfile!.bill!.month} ${_userProfile!.bill!.year}',style: TextStyle(color: BaseColor.grey),)
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             SizedBox(height: 20,),

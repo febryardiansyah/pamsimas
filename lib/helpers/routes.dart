@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pamsimas/splash_screen.dart';
 import 'package:pamsimas/ui/check_bill/check_bill_screen.dart';
 import 'package:pamsimas/ui/check_data/check_data_screen.dart';
+import 'package:pamsimas/ui/check_data/user_data_screen.dart';
 import 'package:pamsimas/ui/create_user/create_user_screen.dart';
 import 'package:pamsimas/ui/home/home_screen.dart';
 import 'package:pamsimas/ui/index.dart';
@@ -45,6 +46,9 @@ Route? generateRoute(RouteSettings settings){
     case rCheckData:
       _route = _pageRoute(settings: settings, body: CheckDataScreen());
       break;
+    case rUserData:
+      _route = _pageRoute(settings: settings, body: UserDataScreen(uid: _args as String));
+      break;
   }
   return _route;
 }
@@ -58,3 +62,4 @@ const String rScanResult = '/scanResult';
 const String rAddCustomer = '/addCustomer';
 const String rCheckBill = '/checkBill';
 const String rCheckData = '/CheckData';
+const String rUserData = '/userData';

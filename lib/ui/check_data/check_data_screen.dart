@@ -6,6 +6,7 @@ import 'package:pamsimas/bloc/get_data/get_data_cubit.dart';
 import 'package:pamsimas/components/build_category.dart';
 import 'package:pamsimas/components/build_payed_status.dart';
 import 'package:pamsimas/helpers/base_color.dart';
+import 'package:pamsimas/helpers/routes.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class CheckDataScreen extends StatefulWidget {
@@ -175,29 +176,34 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                         physics: ClampingScrollPhysics(),
                         itemBuilder: (context,i){
                           final _item = _data[i];
-                          return Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(_item.name!,style: TextStyle(fontSize: 20,),),
-                                      SizedBox(height: 8,),
-                                      BuildCategory(category: _item.category!,),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  _item.bill == null?
-                                  Text('Belum ada tagihan'):BuildPayedStatus(isPayed: _item.bill!.isPayed!)
-                                ],
+                          return GestureDetector(
+                            onTap: (){
+                              Navigator.pushNamed(context, rUserData,arguments: _item.uid!);
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)
+                              ),
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Text(_item.name!,style: TextStyle(fontSize: 20,),),
+                                        SizedBox(height: 8,),
+                                        BuildCategory(category: _item.category!,),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    _item.bill == null?
+                                    Text('Belum ada tagihan'):BuildPayedStatus(isPayed: _item.bill!.isPayed!)
+                                  ],
+                                ),
                               ),
                             ),
                           );

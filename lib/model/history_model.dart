@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class HistoryModel{
   String? uid;
   List<BillModel>? bills;
@@ -23,8 +25,9 @@ class BillModel {
   bool? isPayed;
   String? year;
   String? usage;
+  DateTime? createdAt;
 
-  BillModel({this.currentBill, this.month, this.isPayed,this.year,this.usage});
+  BillModel({this.currentBill, this.month, this.isPayed,this.year,this.usage,this.createdAt});
 
   factory BillModel.fromMap(Map<String,dynamic>json){
     return BillModel(
@@ -32,7 +35,8 @@ class BillModel {
       month: json['month'] == null?null:json['month'],
       isPayed: json['isPayed'] == null?null:json['isPayed'],
       year: json['year'] == null?null:json['year'],
-      usage: json['usage'] == null?null:json['usage']
+      usage: json['usage'] == null?null:json['usage'],
+      // createdAt: json['createdAt'] == null?null:DateTime.parse(json['createdAt'])
     );
   }
 
@@ -41,6 +45,7 @@ class BillModel {
     'month':month,
     'isPayed':isPayed,
     'year':year,
-    'usage':usage
+    'usage':usage,
+    'createdAt':createdAt
   };
 }

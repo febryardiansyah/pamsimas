@@ -49,29 +49,30 @@ class UserRepo{
   Future<ResponseModel> inputUserBill({required String uid,required int currentBill,required String month,required String year,required String usage})async{
     try{
       final _billData = BillModel(
-          currentBill: currentBill,month: month,isPayed: false,year: year,usage: usage
+          currentBill: currentBill,month: month,isPayed: false,year: year,usage: usage,createdAt: DateTime.now()
       );
       await _fireStore.collection('users').doc(uid).update({
         'bill':{
-          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,'usage':usage
+          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,'usage':usage,'createdAt':DateTime.now()
         }
       });
       final _ref = _fireStore.collection('history').doc(uid);
-      _ref.get().then((value)async{
-        if (value.data() == null) {
-          await _fireStore.collection('history').doc(uid).set({
-            'uid':uid,
-            'bills':FieldValue.arrayUnion([_billData.toMap()]),
-          });
-        } else {
-          List _list = await value.data()!['bills'];
-          _list.add(_billData.toMap());
-          await _fireStore.collection('history').doc(uid).set({
-            'uid':uid,
-            'bills':FieldValue.arrayUnion(_list),
-          });
-        }
-      });
+      await _fireStore.collection('history').doc(uid).collection('bills').add(_billData.toMap());
+      // _ref.get().then((value)async{
+      //   if (value.data() == null) {
+      //     await _fireStore.collection('history').doc(uid).collection('bills').add({
+      //       'uid':uid,
+      //       'bills':FieldValue.arrayUnion([_billData.toMap()]),
+      //     });
+      //   } else {
+      //     List _list = await value.data()!['bills'];
+      //     _list.add(_billData.toMap());
+      //     await _fireStore.collection('history').doc(uid).collection('bills').add({
+      //       'uid':uid,
+      //       'bills':FieldValue.arrayUnion(_list),
+      //     });
+      //   }
+      // });
 
       return ResponseModel(
         status: true,msg: 'Berhasil',data: null,

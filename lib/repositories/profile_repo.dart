@@ -17,4 +17,25 @@ class ProfileRepo {
       return ResponseModel(status: false,msg: Helper.getAuthErr(e.code),data: null);
     }
   }
+
+  Future<ResponseModel> getHistoryByUid({required int limit,String? uid})async{
+    try{
+      String _token = await AuthRepo.getToken();
+      String _parseToken = _token.length > 7 ? _token.substring(0,7):_token;
+      String _uid = uid == null?_parseToken:uid;
+      final _res = await _fireStore
+          .collection('history').doc(_uid).collection('bills')
+          .orderBy('createdAt',descending: true)
+          .limit(limit).get();
+      // print(_res.docs);
+      return ResponseModel(
+          msg: 'Berhasil',data: _res.docs,status: true
+      );
+    }on FirebaseException catch(e){
+      print(e);
+      return ResponseModel(
+          status: false,data: null,msg: Helper.getAuthErr(e.code)
+      );
+    }
+  }
 }

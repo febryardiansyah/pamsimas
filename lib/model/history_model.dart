@@ -20,6 +20,7 @@ class HistoryModel{
 }
 
 class BillModel {
+  String? id;
   int? currentBill;
   String? month;
   bool? isPayed;
@@ -27,10 +28,11 @@ class BillModel {
   String? usage;
   DateTime? createdAt;
 
-  BillModel({this.currentBill, this.month, this.isPayed,this.year,this.usage,this.createdAt});
+  BillModel({this.currentBill, this.month, this.isPayed,this.year,this.usage,this.createdAt,this.id});
 
   factory BillModel.fromMap(Map<String,dynamic>json){
     return BillModel(
+      id: json['id'] == null?null:json['id'],
       currentBill: json['currentBill'] == null?null:json['currentBill'],
       month: json['month'] == null?null:json['month'],
       isPayed: json['isPayed'] == null?null:json['isPayed'],
@@ -41,6 +43,7 @@ class BillModel {
   }
 
   Map<String,dynamic> toMap()=>{
+    'id':id,
     'currentBill':currentBill,
     'month':month,
     'isPayed':isPayed,

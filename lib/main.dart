@@ -8,6 +8,7 @@ import 'package:pamsimas/bloc/create_user/create_user_cubit.dart';
 import 'package:pamsimas/bloc/get_history_bill/get_history_bill_cubit.dart';
 import 'package:pamsimas/bloc/input_user_bill/input_user_bill_cubit.dart';
 import 'package:pamsimas/bloc/sign_in/sign_in_cubit.dart';
+import 'package:pamsimas/bloc/update_payment_status/update_payment_status_cubit.dart';
 import 'package:pamsimas/helpers/base_string.dart';
 import 'package:pamsimas/helpers/routes.dart';
 
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_)=>InputUserBillCubit()),
         BlocProvider(create: (_)=>GetDataCubit()),
         BlocProvider(create: (_)=>GetHistoryBillCubit()),
+        BlocProvider(create: (_)=>UpdatePaymentStatusCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -3,10 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pamsimas/helpers/helper.dart';
 import 'package:pamsimas/model/ResponseModel.dart';
 import 'package:pamsimas/model/history_model.dart';
+import 'package:uuid/uuid.dart';
 
 class UserRepo{
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
+  final _uuid = Uuid();
 
   Future<ResponseModel> getUserByUid(String uid)async{
     try{
@@ -48,31 +50,17 @@ class UserRepo{
 
   Future<ResponseModel> inputUserBill({required String uid,required int currentBill,required String month,required String year,required String usage})async{
     try{
-      final _billData = BillModel(
-          currentBill: currentBill,month: month,isPayed: false,year: year,usage: usage,createdAt: DateTime.now()
-      );
+      String _id = '${_uuid.v1()}$uid${DateTime.now().millisecondsSinceEpoch}';
       await _fireStore.collection('users').doc(uid).update({
         'bill':{
-          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,'usage':usage,'createdAt':DateTime.now()
+          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,'usage':usage,'createdAt':DateTime.now(),'id':_id
         }
       });
-      final _ref = _fireStore.collection('history').doc(uid);
-      await _fireStore.collection('history').doc(uid).collection('bills').add(_billData.toMap());
-      // _ref.get().then((value)async{
-      //   if (value.data() == null) {
-      //     await _fireStore.collection('history').doc(uid).collection('bills').add({
-      //       'uid':uid,
-      //       'bills':FieldValue.arrayUnion([_billData.toMap()]),
-      //     });
-      //   } else {
-      //     List _list = await value.data()!['bills'];
-      //     _list.add(_billData.toMap());
-      //     await _fireStore.collection('history').doc(uid).collection('bills').add({
-      //       'uid':uid,
-      //       'bills':FieldValue.arrayUnion(_list),
-      //     });
-      //   }
-      // });
+      print('BILL DOC ID ==> $_id');
+      final _billData = BillModel(
+          currentBill: currentBill,month: month,isPayed: false,year: year,usage: usage,createdAt: DateTime.now(),id:_id,
+      );
+      await _fireStore.collection('history').doc(uid).collection('bills').doc(_id).set(_billData.toMap());
 
       return ResponseModel(
         status: true,msg: 'Berhasil',data: null,

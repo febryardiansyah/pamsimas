@@ -38,4 +38,32 @@ class ProfileRepo {
       );
     }
   }
+
+  Future<ResponseModel> updatePaymentStatus({required bool status,required String uid,required bool userCollection,String? id})async{
+    try{
+      print("ID ====> $id");
+      if (userCollection) {
+        print('USER COLLECTION');
+        await _fireStore.collection('users').doc(uid).update({
+          'bill.isPayed':status
+        });
+        await _fireStore.collection('history').doc(uid).collection('bills').doc(id).update({
+          'isPayed':status,
+        });
+      } else {
+        print('HISTORY COLLECTION');
+        await _fireStore.collection('history').doc(uid).collection('bills').doc(id).update({
+          'isPayed':status,
+        });
+      }
+      return ResponseModel(
+          msg: 'Berhasil memperbaharui status pembayaran',data: null,status: true
+      );
+    }on FirebaseException catch(e){
+      print(e);
+      return ResponseModel(
+          status: false,data: null,msg: Helper.getAuthErr(e.code)
+      );
+    }
+  }
 }

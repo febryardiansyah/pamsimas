@@ -18,6 +18,9 @@ class Helper{
       case 'email-already-in-use':
         _msg = 'Gunakan nama lain';
         break;
+      case 'not-found':
+        _msg = 'Data tidak ditemukan';
+        break;
       default:
         _msg = 'Terjadi kesalahan';
         break;

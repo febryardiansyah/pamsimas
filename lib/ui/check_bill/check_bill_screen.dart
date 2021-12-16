@@ -36,7 +36,6 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
             }
             if (state is GetProfileSuccess) {
               final _data = state.data!;
-              final _bill = _data.bill!;
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -93,7 +92,7 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                                 child: Container(
                                   padding: EdgeInsets.all(8),
                                   margin: EdgeInsets.symmetric(horizontal: 20),
-                                  child: Center(child: Text(Helper.formatCurrency(_bill.currentBill!),style: TextStyle(color: BaseColor.white,fontSize: 30,fontWeight: FontWeight.bold),),),
+                                  child: Center(child: Text(_data.bill == null?'':Helper.formatCurrency(_data.bill!.currentBill!),style: TextStyle(color: BaseColor.white,fontSize: 30,fontWeight: FontWeight.bold),),),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: BaseColor.white.withOpacity(0.3)
@@ -110,7 +109,9 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                         ],
                       ),
                     ),
-                    Padding(
+                    _data.bill == null?Center(
+                      child: Text('Belum ada data'),
+                    ):Padding(
                       padding: EdgeInsets.all(10),
                       child: Card(
                         elevation: 4,
@@ -142,7 +143,7 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                                     children: [
                                       Text('Pemakaian',style: TextStyle(color: BaseColor.grey),),
                                       Spacer(),
-                                      Text('${_bill.usage} m3')
+                                      Text('${_data.bill!.usage} m3')
                                     ],
                                   ),
                                 ],
@@ -153,15 +154,15 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                               Row(
                                 children: [
                                   Container(
-                                    child: Text(_bill.isPayed!?'Sudah Bayar':'Belum Bayar',style: TextStyle(color: BaseColor.white),),
+                                    child: Text(_data.bill!.isPayed!?'Sudah Bayar':'Belum Bayar',style: TextStyle(color: BaseColor.white),),
                                     padding: EdgeInsets.symmetric(vertical: 8,horizontal: 10),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
-                                      color: _bill.isPayed!?BaseColor.greenDeep:BaseColor.red,
+                                      color: _data.bill!.isPayed!?BaseColor.greenDeep:BaseColor.red,
                                     ),
                                   ),
                                   Spacer(),
-                                  Text('${_bill.month} ${_bill.year}',style: TextStyle(color: BaseColor.grey),)
+                                  Text('${_data.bill!.month} ${_data.bill!.year}',style: TextStyle(color: BaseColor.grey),)
                                 ],
                               ),
                               SizedBox(height: 10,),

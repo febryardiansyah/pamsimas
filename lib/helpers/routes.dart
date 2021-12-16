@@ -6,6 +6,7 @@ import 'package:pamsimas/ui/check_data/check_data_screen.dart';
 import 'package:pamsimas/ui/check_data/user_data_screen.dart';
 import 'package:pamsimas/ui/create_user/create_user_screen.dart';
 import 'package:pamsimas/ui/home/home_screen.dart';
+import 'package:pamsimas/ui/home/settings_screen.dart';
 import 'package:pamsimas/ui/index.dart';
 import 'package:pamsimas/ui/login_register/login_screen.dart';
 import 'package:pamsimas/ui/qr_code/qr_code_screen.dart';
@@ -53,6 +54,9 @@ Route? generateRoute(RouteSettings settings){
     case rHistoryBill:
       _route = _pageRoute(settings: settings, body: HistoryBillScreen());
       break;
+    case rSettings:
+      _route = _pageRoute(settings: settings, body: SettingsScreen());
+      break;
   }
   return _route;
 }
@@ -68,3 +72,4 @@ const String rCheckBill = '/checkBill';
 const String rCheckData = '/CheckData';
 const String rUserData = '/userData';
 const String rHistoryBill = '/historyBill';
+const String rSettings = '/settings';

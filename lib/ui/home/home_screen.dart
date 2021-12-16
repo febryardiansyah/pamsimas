@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late Size _size;
   late List<HomeModel> _adminMenuList;
   late List<HomeModel> _userMenuList;
+  late List<HomeModel> _employeeList;
   UserModel? _userProfile;
   String? _name = '';
   String? _role = '';
@@ -58,18 +59,18 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
     _adminMenuList = [
       HomeModel(
-        onTap: ()=>Navigator.pushNamed(context, rHome),
-        title: 'Cek Tagihan',color: Colors.lightBlue,icon: BaseString.iInvoice,
-      ),
-      HomeModel(
-        onTap: (){
-          _scanQr(context);
-        },
-        title: 'Scan',color: Colors.lightBlue,icon: BaseString.iBarcode,
-      ),
-      HomeModel(
         onTap: ()=>Navigator.pushNamed(context, rCheckData),
         title: 'Cek Data',color: Colors.lightBlue,icon: BaseString.iData,
+      ),
+      HomeModel(
+        onTap: ()=>Navigator.pushNamed(context, rAddCustomer),
+        title: 'Tambah Pengguna',color: Colors.lightBlue,icon: BaseString.iAddUser,
+      ),
+    ];
+    _employeeList = [
+      HomeModel(
+        onTap: ()=>_scanQr(context),
+        title: 'Input Meteran',color: Colors.lightBlue,icon: BaseString.iMeter,
       ),
       HomeModel(
         onTap: ()=>Navigator.pushNamed(context, rAddCustomer),
@@ -88,12 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: BlocListener<AuthCubit,AuthState>(
         listener: (context,state){
-          if (state is LogOutLoading) {
-            EasyLoading.show(status: 'Tunggu sebentar');
-          }
-          if (state is LogOutFailure) {
-            EasyLoading.showError(state.msg!);
-          }
           if (state is AuthUnAuthenticated) {
             EasyLoading.dismiss();
             Navigator.pushNamedAndRemoveUntil(context, rLogin, (route) => false);
@@ -138,6 +133,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: Icon(Icons.notifications,color: BaseColor.orange,),
                         ),
                         IconButton(
+                          onPressed: (){},
+                          icon: Icon(Icons.settings,color: BaseColor.grey,),
+                        ),
+                        IconButton(
                           onPressed: (){
                             context.read<AuthCubit>().loggedOut();
                           },
@@ -165,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       ],
                     ),
-                    _role == 'Admin'?Center():
+                    _role == 'Admin' || _role == 'Petugas'?Center():
                         Column(
                           children: [
                             SizedBox(height: 20,),
@@ -263,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisCount: 2,crossAxisSpacing: 30,mainAxisSpacing: 5,childAspectRatio: 1
                       ),
                       itemBuilder: (context,i){
-                        final _item = _role == 'Admin' ?_adminMenuList[i]:_userMenuList[i];
+                        final _item = _role == 'Admin' ?_adminMenuList[i]:_role == 'Petugas'?_employeeList[i]:_userMenuList[i];
                         return GestureDetector(
                           onTap: _item.onTap,
                           child: Card(

@@ -30,7 +30,6 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
   TextEditingController _currentYear = TextEditingController();
   List<String> _monthList = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   TextEditingController _inputCtrl = TextEditingController();
-  int _lastBill = 700;
   int _totalBill = 0;
 
   @override
@@ -67,6 +66,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
             }
             if (state is GetUserByUidSuccess) {
               final _data = state.data!;
+              _lastBillCtrl.text = _data.bill == null?'':_data.bill!.usage!.toString();
               _category = _data.category ?? '';
               return Stack(
                 children: [
@@ -102,7 +102,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                     children: [
                                       Text(_data.name!,style: TextStyle(fontSize: 20),),
                                       SizedBox(height: 8,),
-                                      Text('Meteran Lalu : 700'),
+                                      Text('Meteran Lalu : ${_lastBillCtrl.text}'),
                                     ],
                                   ),
                                   Spacer(),
@@ -111,25 +111,26 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                               ),
                               SizedBox(height: 8,),
                               Divider(),
-                              // SwitchListTile(
-                              //   title: Text('Meteran bulan lalu'),
-                              //   value: _isLastBillManual,
-                              //   activeColor: BaseColor.lightBlue,
-                              //   onChanged: (val){
-                              //     setState(() {
-                              //       _isLastBillManual = val;
-                              //     });
-                              //   },
-                              // ),
-                              // !_isLastBillManual?Center():
-                              // TextFormField(
-                              //   controller: _lastBillCtrl,
-                              //   keyboardType: TextInputType.number,
-                              //   decoration: InputDecoration(
-                              //     hintText: 'Input meteran',
-                              //     label: Text('Meteran bulan lalu'),
-                              //   ),
-                              // ),
+                              SwitchListTile(
+                                title: Text('Meteran sebelumnya'),
+                                subtitle: Text('Masukan meteran bulan sebelumnya manual'),
+                                value: _isLastBillManual,
+                                activeColor: BaseColor.lightBlue,
+                                onChanged: (val){
+                                  setState(() {
+                                    _isLastBillManual = val;
+                                  });
+                                },
+                              ),
+                              !_isLastBillManual?Center():
+                              TextFormField(
+                                controller: _lastBillCtrl,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  hintText: 'Input meteran',
+                                  label: Text('Meteran bulan lalu'),
+                                ),
+                              ),
                               SizedBox(height: 10,),
                               SizedBox(height: 8,),
                               TextFormField(
@@ -138,9 +139,6 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                 decoration: InputDecoration(
                                     hintText: 'Input Meteran',
                                     label: Text('Meter Sekarang')
-                                    // border: OutlineInputBorder(
-                                    //     borderRadius: BorderRadius.circular(8)
-                                    // )
                                 ),
                               ),
                               SizedBox(height: 20,),
@@ -228,7 +226,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
         break;
     }
     int _input = int.parse(_inputCtrl.text);
-    int _mt = _input - _lastBill;
+    int _mt = _input - int.parse(_lastBillCtrl.text);
     int _res = (_mt ~/ 20).toInt();
     int _bill = _priceByCategory * _res;
     setState(() {

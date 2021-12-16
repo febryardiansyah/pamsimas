@@ -131,47 +131,53 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                     Text(_data.address!)
                                   ],
                                 ),
-                                SizedBox(height: 8,),
-                                Row(
-                                  children: [
-                                    Text('Pemakaian bulan ini',style: TextStyle(color: BaseColor.grey),),
-                                    Spacer(),
-                                    Text('${_data.bill!.usage} m3')
-                                  ],
-                                ),
-                                SizedBox(height: 8,),
-                                Row(
-                                  children: [
-                                    Text('Periode tagihan',style: TextStyle(color: BaseColor.grey),),
-                                    Spacer(),
-                                    Text('${_data.bill!.month} ${_data.bill!.year}')
-                                  ],
-                                ),
-                                SizedBox(height: 8,),
-                                Row(
-                                  children: [
-                                    Text('Tagihan bulan ini',style: TextStyle(color: BaseColor.grey),),
-                                    Spacer(),
-                                    Text(Helper.formatCurrency(_data.bill!.currentBill!))
-                                  ],
-                                ),
-                                SizedBox(height: 8,),
-                                Row(
-                                  children: [
-                                    Text('Status',style: TextStyle(color: BaseColor.grey),),
-                                    Spacer(),
-                                    Text(_data.bill!.isPayed! ? 'Sudah dibayar':'Belum dibayar')
-                                  ],
-                                ),
-                                SizedBox(height: 15,),
-                                Center(
-                                  child: FlatButton(
-                                    onPressed: (){
-                                      _showChangeStatus(true,null);
-                                    },
-                                    child: Text('Ubah Status',style: TextStyle(color: BaseColor.red),),
-                                  ),
-                                )
+                                _data.bill == null?
+                                Center(child: Text('Belum ada data')):
+                                Column(
+                                      children: [
+                                        SizedBox(height: 8,),
+                                        Row(
+                                          children: [
+                                            Text('Pemakaian bulan ini',style: TextStyle(color: BaseColor.grey),),
+                                            Spacer(),
+                                            Text('${_data.bill!.usage} m3')
+                                          ],
+                                        ),
+                                        SizedBox(height: 8,),
+                                        Row(
+                                          children: [
+                                            Text('Periode tagihan',style: TextStyle(color: BaseColor.grey),),
+                                            Spacer(),
+                                            Text('${_data.bill!.month} ${_data.bill!.year}')
+                                          ],
+                                        ),
+                                        SizedBox(height: 8,),
+                                        Row(
+                                          children: [
+                                            Text('Tagihan bulan ini',style: TextStyle(color: BaseColor.grey),),
+                                            Spacer(),
+                                            Text(Helper.formatCurrency(_data.bill!.currentBill!))
+                                          ],
+                                        ),
+                                        SizedBox(height: 8,),
+                                        Row(
+                                          children: [
+                                            Text('Status',style: TextStyle(color: BaseColor.grey),),
+                                            Spacer(),
+                                            Text(_data.bill!.isPayed! ? 'Sudah dibayar':'Belum dibayar')
+                                          ],
+                                        ),
+                                        SizedBox(height: 15,),
+                                        Center(
+                                          child: FlatButton(
+                                            onPressed: (){
+                                              _showChangeStatus(true,null);
+                                            },
+                                            child: Text('Ubah Status',style: TextStyle(color: BaseColor.red),),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                               ],
                             ),
                           ),
@@ -189,8 +195,10 @@ class _UserDataScreenState extends State<UserDataScreen> {
                             }
                             if (state is GetHistoryBillSuccess) {
                               final _data = state.data!;
-                              _lastBillId = _data[0].id;
-                              return ListView.builder(
+                              _lastBillId = _data.isEmpty?null:_data[0].id;
+                              return _data.isEmpty?Center(
+                                child: Text('Masih Kosong'),
+                              ): ListView.builder(
                                 shrinkWrap: true,
                                 physics: ClampingScrollPhysics(),
                                 itemCount: _data.length,

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pamsimas/bloc/auth/auth_cubit.dart';
+import 'package:pamsimas/bloc/change_password/change_password_cubit.dart';
 import 'package:pamsimas/bloc/create_user/create_user_cubit.dart';
 import 'package:pamsimas/bloc/get_history_bill/get_history_bill_cubit.dart';
 import 'package:pamsimas/bloc/input_user_bill/input_user_bill_cubit.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_)=>GetDataCubit()),
         BlocProvider(create: (_)=>GetHistoryBillCubit()),
         BlocProvider(create: (_)=>UpdatePaymentStatusCubit()),
+        BlocProvider(create: (_)=>ChangePasswordCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -87,223 +87,209 @@ class _HomeScreenState extends State<HomeScreen> {
     _uid = context.select<GetProfileCubit,String>((value) => value.state is GetProfileSuccess?(value.state as GetProfileSuccess).data!.uid!:'');
     _userProfile = context.select<GetProfileCubit,UserModel>((value) => value.state is GetProfileSuccess?(value.state as GetProfileSuccess).data!:UserModel());
     return Scaffold(
-      body: BlocListener<AuthCubit,AuthState>(
-        listener: (context,state){
-          if (state is AuthUnAuthenticated) {
-            EasyLoading.dismiss();
-            Navigator.pushNamedAndRemoveUntil(context, rLogin, (route) => false);
-          }
-        },
-        child: Stack(
-          children: [
-            Container(
-              width: _size.width,
-              height: _size.height,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    BaseColor.lightBlue,
-                    BaseColor.white,
-                  ],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.center
-                )
-              ),
+      body: Stack(
+        children: [
+          Container(
+            width: _size.width,
+            height: _size.height,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  BaseColor.lightBlue,
+                  BaseColor.white,
+                ],
+                begin: Alignment.bottomCenter,
+                end: Alignment.center
+              )
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                top: _size.height * 0.06,
-                left: 15,
-                right: 15,
-              ),
-              child:
-              _role ==''?Center(child: CupertinoActivityIndicator(),):
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Image.asset(BaseString.iMainLogo,height: 40,width: 100,fit: BoxFit.contain,),
-                        Spacer(),
-                        IconButton(
-                          onPressed: (){
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: _size.height * 0.06,
+              left: 15,
+              right: 15,
+            ),
+            child:
+            _role ==''?Center(child: CupertinoActivityIndicator(),):
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(BaseString.iMainLogo,height: 40,width: 100,fit: BoxFit.contain,),
+                      Spacer(),
+                      IconButton(
+                        onPressed: (){
 
-                          },
-                          icon: Icon(Icons.notifications,color: BaseColor.orange,),
-                        ),
-                        IconButton(
-                          onPressed: (){},
-                          icon: Icon(Icons.settings,color: BaseColor.grey,),
-                        ),
-                        IconButton(
-                          onPressed: (){
-                            context.read<AuthCubit>().loggedOut();
-                          },
-                          icon: Icon(Icons.logout_outlined,color: BaseColor.red,),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 10,),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Halo! $_name',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-                        SizedBox(height: 8,),
-                        RichText(
-                          text: TextSpan(
-                            text: _role,
-                            style: TextStyle(color: Colors.black),
-                            children: [
-                              TextSpan(
-                                text: ' (${_userProfile?.uid}) ',
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ]
-                          ),
-                        )
-                      ],
-                    ),
-                    _role == 'Admin' || _role == 'Petugas'?Center():
-                        Column(
+                        },
+                        icon: Icon(Icons.notifications,color: BaseColor.orange,),
+                      ),
+                      IconButton(
+                        onPressed: ()=>Navigator.pushNamed(context, rSettings),
+                        icon: Icon(Icons.settings,color: BaseColor.grey,),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Halo! $_name',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                      SizedBox(height: 8,),
+                      RichText(
+                        text: TextSpan(
+                          text: _role,
+                          style: TextStyle(color: Colors.black),
                           children: [
-                            SizedBox(height: 20,),
-                            Card(
-                              shape: RoundedRectangleBorder(
+                            TextSpan(
+                              text: ' (${_userProfile?.uid}) ',
+                              style: TextStyle(color: Colors.grey),
+                            )
+                          ]
+                        ),
+                      )
+                    ],
+                  ),
+                  _role == 'Admin' || _role == 'Petugas'?Center():
+                      Column(
+                        children: [
+                          SizedBox(height: 20,),
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)
+                            ),
+                            elevation: 4,
+                            child: Container(
+                              width: _size.width,
+                              decoration: BoxDecoration(
+                                color: BaseColor.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text('Tagihan bulan ini'),
+                                            SizedBox(height: 8,),
+                                            Text(_userProfile?.bill == null?'Masih Kosong':Helper.formatCurrency(_userProfile!.bill!.currentBill!),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),),
+                                          ],
+                                        ),
+                                        Spacer(),
+                                        SvgPicture.asset(BaseString.iWaterTap)
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 15,),
+                                  _userProfile?.bill == null?Center():Container(
+                                    width: _size.width,
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                                      color: BaseColor.lightBlue.withOpacity(0.5),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          child: Text(_userProfile!.bill!.isPayed!?'Sudah Bayar':'Belum Bayar',style: TextStyle(color: BaseColor.white),),
+                                          padding: EdgeInsets.symmetric(vertical: 8,horizontal: 10),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(8),
+                                            color: _userProfile!.bill!.isPayed!?BaseColor.greenDeep:BaseColor.red
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Text('${_userProfile!.bill!.month} ${_userProfile!.bill!.year}',style: TextStyle(color: BaseColor.grey),)
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20,),
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.pushNamed(context, rQrCode,arguments: _uid);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              width: _size.width,
+                              decoration: BoxDecoration(
+                                color: BaseColor.lightBlue,
                                 borderRadius: BorderRadius.circular(8)
                               ),
-                              elevation: 4,
-                              child: Container(
-                                width: _size.width,
-                                decoration: BoxDecoration(
-                                  color: BaseColor.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text('Tagihan bulan ini'),
-                                              SizedBox(height: 8,),
-                                              Text(_userProfile?.bill == null?'Masih Kosong':Helper.formatCurrency(_userProfile!.bill!.currentBill!),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),),
-                                            ],
-                                          ),
-                                          Spacer(),
-                                          SvgPicture.asset(BaseString.iWaterTap)
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 15,),
-                                    _userProfile?.bill == null?Center():Container(
-                                      width: _size.width,
-                                      padding: EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
-                                        color: BaseColor.lightBlue.withOpacity(0.5),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            child: Text(_userProfile!.bill!.isPayed!?'Sudah Bayar':'Belum Bayar',style: TextStyle(color: BaseColor.white),),
-                                            padding: EdgeInsets.symmetric(vertical: 8,horizontal: 10),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(8),
-                                              color: _userProfile!.bill!.isPayed!?BaseColor.greenDeep:BaseColor.red
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Text('${_userProfile!.bill!.month} ${_userProfile!.bill!.year}',style: TextStyle(color: BaseColor.grey),)
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 20,),
-                            GestureDetector(
-                              onTap: (){
-                                Navigator.pushNamed(context, rQrCode,arguments: _uid);
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8),
-                                width: _size.width,
-                                decoration: BoxDecoration(
-                                  color: BaseColor.lightBlue,
-                                  borderRadius: BorderRadius.circular(8)
-                                ),
-                                child: Center(
-                                  child: Row(
-                                    children: [
-                                      Text('Tampilkan QrCode',style: TextStyle(color: BaseColor.white,fontWeight: FontWeight.bold),),
-                                      Spacer(),
-                                      IconButton(
-                                        onPressed: (){},
-                                        icon: SvgPicture.asset(BaseString.iBarcode),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      itemCount: _role == 'Admin'?_adminMenuList.length:_userMenuList.length,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,crossAxisSpacing: 30,mainAxisSpacing: 5,childAspectRatio: 1
-                      ),
-                      itemBuilder: (context,i){
-                        final _item = _role == 'Admin' ?_adminMenuList[i]:_role == 'Petugas'?_employeeList[i]:_userMenuList[i];
-                        return GestureDetector(
-                          onTap: _item.onTap,
-                          child: Card(
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    BaseColor.darkBlue,
-                                    BaseColor.lightBlue
-                                  ],
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter
-                                )
-                              ),
                               child: Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(20),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(_item.icon!,),
-                                      SizedBox(height: 8,),
-                                      Text(_item.title!,style: GoogleFonts.josefinSans(color: Colors.white,fontWeight: FontWeight.bold),textAlign: TextAlign.center,)
-                                    ],
-                                  ),
+                                child: Row(
+                                  children: [
+                                    Text('Tampilkan QrCode',style: TextStyle(color: BaseColor.white,fontWeight: FontWeight.bold),),
+                                    Spacer(),
+                                    IconButton(
+                                      onPressed: (){},
+                                      icon: SvgPicture.asset(BaseString.iBarcode),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
                           ),
-                        );
-                      },
-                    )
-                  ],
-                ),
+                        ],
+                      ),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: _role == 'Admin'?_adminMenuList.length:_userMenuList.length,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,crossAxisSpacing: 30,mainAxisSpacing: 5,childAspectRatio: 1
+                    ),
+                    itemBuilder: (context,i){
+                      final _item = _role == 'Admin' ?_adminMenuList[i]:_role == 'Petugas'?_employeeList[i]:_userMenuList[i];
+                      return GestureDetector(
+                        onTap: _item.onTap,
+                        child: Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: LinearGradient(
+                                colors: [
+                                  BaseColor.darkBlue,
+                                  BaseColor.lightBlue
+                                ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter
+                              )
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(_item.icon!,),
+                                    SizedBox(height: 8,),
+                                    Text(_item.title!,style: GoogleFonts.josefinSans(color: Colors.white,fontWeight: FontWeight.bold),textAlign: TextAlign.center,)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

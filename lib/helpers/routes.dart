@@ -57,6 +57,9 @@ Route? generateRoute(RouteSettings settings){
     case rSettings:
       _route = _pageRoute(settings: settings, body: SettingsScreen());
       break;
+    case rChangePassword:
+      _route = _pageRoute(settings: settings, body: ChangePasswordScreen());
+      break;
   }
   return _route;
 }
@@ -73,3 +76,4 @@ const String rCheckData = '/CheckData';
 const String rUserData = '/userData';
 const String rHistoryBill = '/historyBill';
 const String rSettings = '/settings';
+const String rChangePassword = '/chanegPassword';

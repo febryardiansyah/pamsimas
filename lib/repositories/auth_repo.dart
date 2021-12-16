@@ -30,6 +30,27 @@ class AuthRepo {
     }
   }
 
+  Future<ResponseModel> changePassword({required String email,required String oldPassword,required String newPassword})async{
+    try{
+      AuthCredential _credential = EmailAuthProvider.credential(email: '$email@pampay.com', password: oldPassword);
+      User? _user = _auth.currentUser;
+      await _user?.reauthenticateWithCredential(_credential);
+      if (_user != null) {
+        print('Current User not null');
+        await _user.updatePassword(newPassword);
+        String _docId = _user.uid.length > 7 ? _user.uid.substring(0,7):_user.uid;
+        _firestore.collection('users').doc(_docId).update({
+          'password':newPassword,
+        });
+      }
+      return ResponseModel(
+        status: true,msg: 'Password berhasil diubah',data: null,
+      );
+    }on FirebaseException catch(e){
+      return ResponseModel(status: false,msg: Helper.getAuthErr(e.code),data: null);
+    }
+  }
+
   Future<void> signOut()async{
     await _auth.signOut();
     await deleteToken();

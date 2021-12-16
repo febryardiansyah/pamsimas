@@ -1,5 +1,6 @@
 class BaseString {
   static String appName = 'PamPay';
+  static String appVersion = '0.0.1';
   static String errorMessage = "Terjadi kesalahan, silahkan coba lagi";
 
   static String vBlueVector = "assets/vector/blue-vector.png";

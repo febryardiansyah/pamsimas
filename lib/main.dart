@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           )
         ),
         builder: EasyLoading.init(),
-        initialRoute: rIndex,
+        initialRoute: rSplash,
         onGenerateRoute: generateRoute,
       ),
     );

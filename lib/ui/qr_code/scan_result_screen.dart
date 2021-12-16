@@ -25,7 +25,8 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
   String? _selectedMonth;
   String _category = '';
   bool _isLastBillManual = false;
-  final _lastBillCtrl = TextEditingController();
+  final _lastBillManualCtrl = TextEditingController();
+  String? _lastBill;
   DateTime _currentDate = DateTime.now();
   TextEditingController _currentYear = TextEditingController();
   List<String> _monthList = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -56,8 +57,16 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
             EasyLoading.showSuccess(state.msg!);
           }
         },
-        child: BlocBuilder<GetUserByUidCubit,GetUserByUidState>(
-          builder: (context,state){
+        child: BlocConsumer<GetUserByUidCubit, GetUserByUidState>(
+          listener: (context, state) {
+            if (state is GetUserByUidSuccess) {
+              setState(() {
+                _lastBillManualCtrl.text = state.data?.bill == null?'': state.data!.bill!.usage!;
+                _lastBill = state.data?.bill == null?null: state.data!.bill!.usage!;
+              });
+            }
+          },
+          builder: (context, state) {
             if (state is GetUserByUidLoading) {
               return Center(child: CupertinoActivityIndicator(),);
             }
@@ -66,7 +75,6 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
             }
             if (state is GetUserByUidSuccess) {
               final _data = state.data!;
-              _lastBillCtrl.text = _data.bill == null?'':_data.bill!.usage!.toString();
               _category = _data.category ?? '';
               return Stack(
                 children: [
@@ -81,8 +89,8 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                     builder: (context,scrollCtrl){
                       return Container(
                         decoration: BoxDecoration(
-                          color: BaseColor.white,
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(20))
+                            color: BaseColor.white,
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(20))
                         ),
                         padding: EdgeInsets.symmetric(vertical: 20,horizontal: 30),
                         child: SingleChildScrollView(
@@ -102,7 +110,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                     children: [
                                       Text(_data.name!,style: TextStyle(fontSize: 20),),
                                       SizedBox(height: 8,),
-                                      Text('Meteran Lalu : ${_lastBillCtrl.text}'),
+                                      Text('Meteran Lalu : ${_data.bill == null ?'-':_data.bill!.usage}'),
                                     ],
                                   ),
                                   Spacer(),
@@ -112,19 +120,22 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                               SizedBox(height: 8,),
                               Divider(),
                               SwitchListTile(
-                                title: Text('Meteran sebelumnya'),
+                                title: Text('Input Meteran lalu'),
                                 subtitle: Text('Masukan meteran bulan sebelumnya manual'),
                                 value: _isLastBillManual,
                                 activeColor: BaseColor.lightBlue,
                                 onChanged: (val){
                                   setState(() {
                                     _isLastBillManual = val;
+                                    if (!_isLastBillManual) {
+                                      _lastBillManualCtrl.clear();
+                                    }
                                   });
                                 },
                               ),
                               !_isLastBillManual?Center():
                               TextFormField(
-                                controller: _lastBillCtrl,
+                                controller: _lastBillManualCtrl,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   hintText: 'Input meteran',
@@ -165,8 +176,8 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                               TextFormField(
                                 controller: _currentYear,
                                 decoration: InputDecoration(
-                                  hintText: 'Tahun',
-                                  label: Text('Tahun')
+                                    hintText: 'Tahun',
+                                    label: Text('Tahun')
                                 ),
                                 onTap: (){
                                   Helper.requestFocusNode(context);
@@ -226,7 +237,20 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
         break;
     }
     int _input = int.parse(_inputCtrl.text);
-    int _mt = _input - int.parse(_lastBillCtrl.text);
+    late int _mt;
+    if (_lastBill == null) {
+      print('LAST BILL == NULL');
+      if (_lastBillManualCtrl.text.isNotEmpty) {
+        print('LAST BILL MANUAL is NOT EMPTY');
+        _mt = _input - int.parse(_lastBillManualCtrl.text);
+      }else{
+        print('LAST BILL MANUAL is EMPTY');
+        _mt = _input;
+      }
+    }else{
+      print('LAST BILL NOT NUlLL');
+      _mt = _input - int.parse(_lastBill!);
+    }
     int _res = (_mt ~/ 20).toInt();
     int _bill = _priceByCategory * _res;
     setState(() {

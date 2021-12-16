@@ -6,6 +6,7 @@ import 'package:pamsimas/bloc/get_profile/get_profile_cubit.dart';
 import 'package:pamsimas/helpers/base_color.dart';
 import 'package:pamsimas/helpers/base_string.dart';
 import 'package:pamsimas/helpers/helper.dart';
+import 'package:pamsimas/helpers/routes.dart';
 
 class CheckBillScreen extends StatefulWidget {
 
@@ -91,7 +92,7 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                                 alignment: Alignment.center,
                                 child: Container(
                                   padding: EdgeInsets.all(8),
-
+                                  margin: EdgeInsets.symmetric(horizontal: 20),
                                   child: Center(child: Text(Helper.formatCurrency(_bill.currentBill!),style: TextStyle(color: BaseColor.white,fontSize: 30,fontWeight: FontWeight.bold),),),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
@@ -177,7 +178,7 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                                 title: Text('Riwayat Tagihan'),
                                 subtitle: Text('Lihat tagihan bulan sebelumnya'),
                                 trailing: Icon(Icons.arrow_forward_ios),
-                                onTap: (){},
+                                onTap: ()=>Navigator.pushNamed(context, rHistoryBill),
                               ),
                               SizedBox(height: 10,),
                             ],

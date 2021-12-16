@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pamsimas/splash_screen.dart';
 import 'package:pamsimas/ui/check_bill/check_bill_screen.dart';
+import 'package:pamsimas/ui/check_bill/history_bill_screen.dart';
 import 'package:pamsimas/ui/check_data/check_data_screen.dart';
 import 'package:pamsimas/ui/check_data/user_data_screen.dart';
 import 'package:pamsimas/ui/create_user/create_user_screen.dart';
@@ -49,6 +50,9 @@ Route? generateRoute(RouteSettings settings){
     case rUserData:
       _route = _pageRoute(settings: settings, body: UserDataScreen(uid: _args as String));
       break;
+    case rHistoryBill:
+      _route = _pageRoute(settings: settings, body: HistoryBillScreen());
+      break;
   }
   return _route;
 }
@@ -63,3 +67,4 @@ const String rAddCustomer = '/addCustomer';
 const String rCheckBill = '/checkBill';
 const String rCheckData = '/CheckData';
 const String rUserData = '/userData';
+const String rHistoryBill = '/historyBill';

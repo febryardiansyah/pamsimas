@@ -39,21 +39,24 @@ class ProfileRepo {
     }
   }
 
-  Future<ResponseModel> updatePaymentStatus({required bool status,required String uid,required bool userCollection,String? id})async{
+  Future<ResponseModel> updatePaymentStatus({
+    required bool status,required String uid,required bool userCollection,required int totalPaid,String? id,
+    required int totalCurrentPaid
+  })async{
     try{
       print("ID ====> $id");
       if (userCollection) {
         print('USER COLLECTION');
         await _fireStore.collection('users').doc(uid).update({
-          'bill.isPayed':status
+          'bill.isPayed':status,'bill.totalPaid':totalPaid+totalCurrentPaid
         });
         await _fireStore.collection('history').doc(uid).collection('bills').doc(id).update({
-          'isPayed':status,
+          'isPayed':status,'totalPaid':totalPaid+totalCurrentPaid
         });
       } else {
         print('HISTORY COLLECTION');
         await _fireStore.collection('history').doc(uid).collection('bills').doc(id).update({
-          'isPayed':status,
+          'isPayed':status,'totalPaid':totalPaid+totalCurrentPaid
         });
       }
       return ResponseModel(

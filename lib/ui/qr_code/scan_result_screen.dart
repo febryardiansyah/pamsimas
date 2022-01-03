@@ -224,13 +224,13 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
         _priceByCategory = 1000;
         break;
       case 'R':
-        _priceByCategory = 2000;
+        _priceByCategory = 1500;
         break;
       case 'B':
-        _priceByCategory = 3000;
+        _priceByCategory = 2000;
         break;
       case 'S':
-        _priceByCategory = 4000;
+        _priceByCategory = 1000;
         break;
       default:
         _priceByCategory = 5000;

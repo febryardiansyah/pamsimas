@@ -9,10 +9,14 @@ class UpdatePaymentStatusCubit extends Cubit<UpdatePaymentStatusState> {
   UpdatePaymentStatusCubit() : super(UpdatePaymentStatusInitial());
   final _repo = ProfileRepo();
 
-  Future<void> updateStatus({required String uid,required bool status,required bool userCollection,String? id})async{
+  Future<void> updateStatus({
+    required String uid,required bool status,required bool userCollection,required int totalPaid,String? id,
+    required int totalCurrentPaid
+  })async{
     emit(UpdatePaymentStatusLoading());
     try{
-      final _res = await _repo.updatePaymentStatus(status: status, uid: uid,userCollection: userCollection,id: id,);
+      final _res = await _repo.updatePaymentStatus(
+        status: status, uid: uid,userCollection: userCollection,totalPaid: totalPaid,totalCurrentPaid: totalCurrentPaid,id: id,);
       if (_res.status!) {
         emit(UpdatePaymentStatusSuccess(msg: _res.msg!));
       } else {

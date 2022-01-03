@@ -18,7 +18,7 @@ class StatusCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.all(10),
+        // padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.centerRight,
@@ -31,24 +31,46 @@ class StatusCard extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 40,
-              width: 2,
-              color: _isPayed?BaseColor.green:BaseColor.red,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Container(
+                    height: 40,
+                    width: 2,
+                    color: _isPayed?BaseColor.green:BaseColor.red,
+                  ),
+                  SizedBox(width: 20,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('${data!.month} ${data!.year}',style: TextStyle(fontSize: 20,color: BaseColor.grey),),
+                      SizedBox(height: 5,),
+                      Text(Helper.formatCurrency(data!.currentBill!),style: TextStyle(fontSize: 17),)
+                    ],
+                  ),
+                  Spacer(),
+                  BuildPayedStatus(isPayed: _isPayed)
+                ],
+              ),
             ),
-            SizedBox(width: 20,),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('${data!.month} ${data!.year}',style: TextStyle(fontSize: 20,color: BaseColor.grey),),
-                SizedBox(height: 5,),
-                Text(Helper.formatCurrency(data!.currentBill!),style: TextStyle(fontSize: 17),)
-              ],
-            ),
-            Spacer(),
-            BuildPayedStatus(isPayed: _isPayed)
+            SizedBox(height: 10,),
+            Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                  color: BaseColor.darkBlue,
+                ),
+                child: Text('Total sudah dibayar : ${data?.totalPaid == null?
+                'Rp.0,00':Helper.formatCurrency(data!.totalPaid!)}',style: TextStyle(color: BaseColor.white,fontWeight: FontWeight.bold),),
+              ),
+            )
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class BaseColor {
   static Color lightBlue = Color(0xff43CEFA);
@@ -9,4 +10,5 @@ class BaseColor {
   static Color green = Color(0xff70D981);
   static Color greenDeep = Color(0xff27B04D);
   static Color grey = Color(0xff808080);
+  static Color black = Colors.black;
 }

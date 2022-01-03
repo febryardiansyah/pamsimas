@@ -53,12 +53,14 @@ class UserRepo{
       String _id = '${_uuid.v1()}$uid${DateTime.now().millisecondsSinceEpoch}';
       await _fireStore.collection('users').doc(uid).update({
         'bill':{
-          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,'usage':usage,'createdAt':DateTime.now(),'id':_id
+          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,'usage':usage,'createdAt':DateTime.now(),'id':_id,
+          'totalPaid':0,
         }
       });
       print('BILL DOC ID ==> $_id');
       final _billData = BillModel(
-          currentBill: currentBill,month: month,isPayed: false,year: year,usage: usage,createdAt: DateTime.now(),id:_id,
+        currentBill: currentBill,month: month,isPayed: false,year: year,usage: usage,createdAt: DateTime.now(),id:_id,
+        totalPaid: 0,
       );
       await _fireStore.collection('history').doc(uid).collection('bills').doc(_id).set(_billData.toMap());
 

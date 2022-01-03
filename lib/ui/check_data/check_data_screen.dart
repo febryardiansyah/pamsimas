@@ -8,6 +8,7 @@ import 'package:pamsimas/components/build_payed_status.dart';
 import 'package:pamsimas/helpers/base_color.dart';
 import 'package:pamsimas/helpers/routes.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class CheckDataScreen extends StatefulWidget {
   @override
@@ -28,6 +29,17 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
     _CategoryModel('R', 'Rumah'),
     _CategoryModel('S', 'Sosial'),
   ];
+
+  Future<void> _scanQr(BuildContext context)async{
+    try{
+      final _res = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(_res);
+      Navigator.pushNamed(context, rUserData,arguments: _res);
+    }catch(e){
+      print(e);
+    }
+  }
 
   @override
   void initState() {
@@ -131,16 +143,21 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                           SizedBox(width: 10,),
                           Expanded(
                             flex: 1,
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(width: 1,color: Colors.black)
-                              ),
-                              child: Center(
-                                child: Icon(FontAwesomeIcons.qrcode),
+                            child: GestureDetector(
+                              onTap: (){
+                                _scanQr(context);
+                              },
+                              child: Container(
+                                width: 60,
+                                height: 60,
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(width: 1,color: Colors.black)
+                                ),
+                                child: Center(
+                                  child: Icon(FontAwesomeIcons.qrcode),
+                                ),
                               ),
                             ),
                           )

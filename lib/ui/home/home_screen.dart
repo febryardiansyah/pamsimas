@@ -2,17 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pamsimas/bloc/auth/auth_cubit.dart';
 import 'package:pamsimas/bloc/get_profile/get_profile_cubit.dart';
-import 'package:pamsimas/components/build_payed_status.dart';
 import 'package:pamsimas/helpers/base_color.dart';
 import 'package:pamsimas/helpers/base_string.dart';
 import 'package:pamsimas/helpers/helper.dart';
 import 'package:pamsimas/helpers/routes.dart';
-import 'package:pamsimas/model/history_model.dart';
 import 'package:pamsimas/model/user_model.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -65,6 +61,10 @@ class _HomeScreenState extends State<HomeScreen> {
       HomeModel(
         onTap: ()=>Navigator.pushNamed(context, rAddCustomer),
         title: 'Tambah Pengguna',color: Colors.lightBlue,icon: BaseString.iAddUser,
+      ),
+      HomeModel(
+        onTap: ()=>_scanQr(context),
+        title: 'Input Meteran',color: Colors.lightBlue,icon: BaseString.iMeter,
       ),
     ];
     _employeeList = [

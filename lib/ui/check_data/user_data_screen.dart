@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pamsimas/bloc/get_history_bill/get_history_bill_cubit.dart';
 import 'package:pamsimas/bloc/get_user_by_uid/get_user_by_uid_cubit.dart';
 import 'package:pamsimas/bloc/update_payment_status/update_payment_status_cubit.dart';
@@ -21,6 +22,7 @@ class UserDataScreen extends StatefulWidget {
 
 class _UserDataScreenState extends State<UserDataScreen> {
   late Size _size;
+  final _totalPaidCtrl = TextEditingController();
   final _refreshController = RefreshController(initialRefresh: false);
   bool _hasReachedMax = false;
   String? _lastBillId;
@@ -162,16 +164,24 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                         SizedBox(height: 8,),
                                         Row(
                                           children: [
+                                            Text('Total dibayarkan',style: TextStyle(color: BaseColor.grey),),
+                                            Spacer(),
+                                            Text(_data.bill!.totalPaid == null?'Rp0,00':Helper.formatCurrency(_data.bill!.totalPaid!))
+                                          ],
+                                        ),
+                                        SizedBox(height: 8,),
+                                        Row(
+                                          children: [
                                             Text('Status',style: TextStyle(color: BaseColor.grey),),
                                             Spacer(),
-                                            Text(_data.bill!.isPayed! ? 'Sudah dibayar':'Belum dibayar')
+                                            Text(_data.bill!.isPayed! ? 'Lunas':'Belum Lunas')
                                           ],
                                         ),
                                         SizedBox(height: 15,),
                                         Center(
                                           child: FlatButton(
                                             onPressed: (){
-                                              _showChangeStatus(true,null);
+                                              _showChangeStatus(true,null,_data.bill!.currentBill!,_data.bill!.totalPaid!);
                                             },
                                             child: Text('Ubah Status',style: TextStyle(color: BaseColor.red),),
                                           ),
@@ -209,9 +219,9 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                     child: StatusCard(
                                       onTap: (){
                                         if (i == 0) {
-                                          _showChangeStatus(true,_lastBillId);
+                                          _showChangeStatus(true,_lastBillId,_item.currentBill!,_item.totalPaid!);
                                         } else {
-                                          _showChangeStatus(false,_item.id!);
+                                          _showChangeStatus(false,_item.id!,_item.currentBill!,_item.totalPaid!);
                                         }
                                       },
                                       data: _item,
@@ -236,26 +246,92 @@ class _UserDataScreenState extends State<UserDataScreen> {
     );
   }
 
-  void _showChangeStatus(bool userCollection,String? id){
-    showModalBottomSheet(context: context,shape: RoundedRectangleBorder(
+  void _showChangeStatus(bool userCollection,String? id,int currentBill,int totalPaid){
+    showModalBottomSheet(context: context,isScrollControlled: true,shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(10))
-    ), builder: (context)=>Container(
-      height: _size.height * 0.3,
-      child: Column(
-        children: _statusList.map((e){
-          return ListTile(
-            leading: Icon(e.status?Icons.check:Icons.close,color: e.status?BaseColor.green:BaseColor.red,),
-            title: Text(e.label),
-            onTap: (){
-              Navigator.pop(context);
-              // print(_lastBillId);
-              context.read<UpdatePaymentStatusCubit>().updateStatus(
-                  uid: widget.uid, status: e.status,userCollection: userCollection,id: id == null?_lastBillId:id
-              );
-            },
-          );
-        }).toList(),
+    ), builder: (context)=>Padding(
+      padding: MediaQuery.of(context).viewInsets,
+      child: Container(
+        height: _size.height * 0.3,
+        padding: EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Total dibayar :',style: TextStyle(fontWeight: FontWeight.bold),),
+              TextFormField(
+                controller: _totalPaidCtrl,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: 'Masukan total yang dibayarkan'
+                ),
+              ),
+              SizedBox(height: 20,),
+              GestureDetector(
+                onTap:_totalPaidCtrl.text.isEmpty?null: (){
+                  _showDialogConfirmation(
+                    totalPaid: totalPaid,currentBill: currentBill,
+                    userCollection: userCollection
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                  width: _size.width,
+                  child: Center(child: Text('Konfirmasi',style: TextStyle(fontWeight: FontWeight.bold,color: BaseColor.white,fontSize: 15),)),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: BaseColor.green
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
+    ));
+  }
+
+  void _showDialogConfirmation({int? currentBill,int? totalPaid,bool? userCollection,String? id}){
+    showDialog(context: context, builder: (context)=>AlertDialog(
+      title: Text('Konfirmasi pembayaran'),
+      content: Text('${Helper.formatCurrency(int.parse(_totalPaidCtrl.text))}',style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+      actions: [
+        ElevatedButton(
+          child: Text('Input',style: GoogleFonts.roboto(color: BaseColor.white),),
+          onPressed: (){
+            Navigator.pop(context);
+            int _res = totalPaid! + int.parse(_totalPaidCtrl.text);
+            print(currentBill);
+            if (_res > currentBill!) {
+              EasyLoading.showError('Melebihi batas');
+            } else if (currentBill == _res) {
+              context.read<UpdatePaymentStatusCubit>().updateStatus(
+                uid: widget.uid, status: true,userCollection: userCollection!,id: id == null?_lastBillId:id,
+                totalPaid:int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,
+              );
+            } else {
+              context.read<UpdatePaymentStatusCubit>().updateStatus(
+                uid: widget.uid, status: false,userCollection: userCollection!,id: id == null?_lastBillId:id,
+                totalPaid: int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+              primary: BaseColor.green,
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              elevation: 0
+          ),
+        ),
+        ElevatedButton(
+          child: Text('Batal',style: GoogleFonts.roboto(color: BaseColor.white),),
+          onPressed: ()=>Navigator.pop(context),
+          style: ElevatedButton.styleFrom(
+              primary: BaseColor.red,
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              elevation: 0
+          ),
+        ),
+      ],
     ));
   }
 }

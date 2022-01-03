@@ -178,7 +178,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             Text('Tagihan bulan ini'),
                                             SizedBox(height: 8,),
-                                            Text(_userProfile?.bill == null?'Masih Kosong':Helper.formatCurrency(_userProfile!.bill!.currentBill!),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),),
+                                            _userProfile?.bill == null?Text('Masih Kosong'):Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(Helper.formatCurrency(_userProfile!.bill!.currentBill!),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),),
+                                                SizedBox(height: 8,),
+                                                Text('Sudah dibayar : ${Helper.formatCurrency(_userProfile!.bill!.totalPaid!)}'),
+                                              ],
+                                            )
                                           ],
                                         ),
                                         Spacer(),

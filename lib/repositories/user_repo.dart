@@ -77,9 +77,11 @@ class UserRepo{
 
   Future<ResponseModel> searchUser({required int limit,String? query,bool? status,String? category})async{
     try{
+      String _query = query == null?'':query.length == 0?'':query[0].toUpperCase()+query.substring(1).toLowerCase();
+      print(_query);
       final _res = await _fireStore.collection('users')
           .limit(limit)
-          .where('name',isGreaterThanOrEqualTo: query)
+          .where('name',isGreaterThanOrEqualTo: _query)
           .where('bill.isPayed',isEqualTo: status)
           .where('category',isEqualTo: category)
           .get();

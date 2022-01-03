@@ -20,6 +20,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       appBar: AppBar(
         backgroundColor: BaseColor.lightBlue,
         title: Text('Qr Code'),
+        elevation: 0,
       ),
       body: Center(
         child: QrImage(

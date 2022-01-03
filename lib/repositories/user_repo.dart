@@ -95,6 +95,12 @@ class UserRepo{
     }
   }
 
+  static Future<List<String>> getAddress({required String address})async{
+    final _res = await FirebaseFirestore.instance.collection('address').doc(address).get();
+    List<String>_data = List<String>.from(_res.data()!['value'].map((x)=>x));
+    return _data;
+  }
+
   Future<bool> _checkName(String name)async{
     final _res = await _fireStore.collection('users').where('name',isEqualTo: name).get();
     return _res.docs.isNotEmpty;

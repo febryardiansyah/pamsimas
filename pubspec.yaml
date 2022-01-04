@@ -44,6 +44,10 @@ dependencies:
   uuid: 3.0.5
   intl: ^0.17.0
   pull_to_refresh: ^2.0.0
+  pdf: ^3.6.4
+  open_file: ^3.2.1
+  path_provider: ^2.0.8
+  printing: ^5.6.5
 
 dev_dependencies:
   flutter_launcher_icons: "^0.9.2"

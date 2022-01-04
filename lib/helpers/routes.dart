@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pamsimas/model/user_model.dart';
 import 'package:pamsimas/splash_screen.dart';
 import 'package:pamsimas/ui/check_bill/check_bill_screen.dart';
 import 'package:pamsimas/ui/check_bill/history_bill_screen.dart';
+import 'package:pamsimas/ui/check_bill/invoice_screen.dart';
 import 'package:pamsimas/ui/check_data/check_data_screen.dart';
 import 'package:pamsimas/ui/check_data/user_data_screen.dart';
 import 'package:pamsimas/ui/create_user/create_user_screen.dart';
@@ -60,6 +62,9 @@ Route? generateRoute(RouteSettings settings){
     case rChangePassword:
       _route = _pageRoute(settings: settings, body: ChangePasswordScreen());
       break;
+    case rInvoice:
+      _route = _pageRoute(settings: settings, body: InvoiceScreen(data: _args as UserModel,));
+      break;
   }
   return _route;
 }
@@ -76,4 +81,5 @@ const String rCheckData = '/CheckData';
 const String rUserData = '/userData';
 const String rHistoryBill = '/historyBill';
 const String rSettings = '/settings';
-const String rChangePassword = '/chanegPassword';
+const String rChangePassword = '/changePassword';
+const String rInvoice = '/invoice';

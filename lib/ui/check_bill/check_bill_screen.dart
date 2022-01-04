@@ -16,6 +16,7 @@ class CheckBillScreen extends StatefulWidget {
 
 class _CheckBillScreenState extends State<CheckBillScreen> {
   late Size _size;
+
   @override
   void initState() {
     super.initState();
@@ -63,14 +64,17 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      padding: EdgeInsets.all(8),
-                                      height: 40,
-                                      width: 40,
-                                      child: Center(child: Icon(Icons.arrow_back,color: BaseColor.white,),),
-                                      decoration: BoxDecoration(
-                                        color: BaseColor.white.withOpacity(0.3),
-                                        borderRadius: BorderRadius.circular(8),
+                                    GestureDetector(
+                                      onTap: ()=>Navigator.pop(context),
+                                      child: Container(
+                                        padding: EdgeInsets.all(8),
+                                        height: 40,
+                                        width: 40,
+                                        child: Center(child: Icon(Icons.arrow_back,color: BaseColor.white,),),
+                                        decoration: BoxDecoration(
+                                          color: BaseColor.white.withOpacity(0.3),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
                                       ),
                                     ),
                                     Spacer(),
@@ -146,6 +150,14 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                                       Text('${_data.bill!.usage} m3')
                                     ],
                                   ),
+                                  SizedBox(height: 10,),
+                                  Row(
+                                    children: [
+                                      Text('Sudah dibayar',style: TextStyle(color: BaseColor.grey),),
+                                      Spacer(),
+                                      Text('${_data.bill!.totalPaid == null?'Rp0,00':Helper.formatCurrency(_data.bill!.totalPaid!)}')
+                                    ],
+                                  ),
                                 ],
                               ),
                               SizedBox(height: 10,),
@@ -154,7 +166,7 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                               Row(
                                 children: [
                                   Container(
-                                    child: Text(_data.bill!.isPayed!?'Sudah Bayar':'Belum Bayar',style: TextStyle(color: BaseColor.white),),
+                                    child: Text(_data.bill!.isPayed!?'Lunas':'Belum Lunas',style: TextStyle(color: BaseColor.white),),
                                     padding: EdgeInsets.symmetric(vertical: 8,horizontal: 10),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
@@ -171,7 +183,7 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                                 title: Text('Lihat Invoice'),
                                 subtitle: Text('Invoice tagihan bulan ini'),
                                 trailing: Icon(Icons.arrow_forward_ios),
-                                onTap: (){},
+                                onTap: ()=>Navigator.pushNamed(context, rInvoice,arguments: _data),
                               ),
                               Divider(),
                               SizedBox(height: 10,),

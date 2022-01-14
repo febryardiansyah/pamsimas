@@ -41,10 +41,11 @@ class ProfileRepo {
 
   Future<ResponseModel> updatePaymentStatus({
     required bool status,required String uid,required bool userCollection,required int totalPaid,String? id,
-    required int totalCurrentPaid
+    required int totalCurrentPaid,int? index
   })async{
     try{
       print("ID ====> $id");
+      print('USER COLLECTION VALUE => $userCollection');
       if (userCollection) {
         print('USER COLLECTION');
         await _fireStore.collection('users').doc(uid).update({

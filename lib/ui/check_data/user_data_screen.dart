@@ -59,6 +59,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
               EasyLoading.showError(state.msg!);
             }
             if (state is UpdatePaymentStatusSuccess) {
+              _totalPaidCtrl.clear();
               context.read<GetUserByUidCubit>().fetchUserByUid(widget.uid);
               context.read<GetHistoryBillCubit>().fetchHistory(uid: widget.uid);
               EasyLoading.showSuccess(state.msg!);
@@ -181,7 +182,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                         Center(
                                           child: FlatButton(
                                             onPressed: (){
-                                              _showChangeStatus(true,null,_data.bill!.currentBill!,_data.bill!.totalPaid!);
+                                              _showChangeStatus(true,null,_data.bill!.currentBill!,_data.bill!.totalPaid!,0);
                                             },
                                             child: Text('Ubah Status',style: TextStyle(color: BaseColor.red),),
                                           ),
@@ -218,10 +219,11 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                     padding: EdgeInsets.only(bottom: 10),
                                     child: StatusCard(
                                       onTap: (){
+                                        print(i);
                                         if (i == 0) {
-                                          _showChangeStatus(true,_lastBillId,_item.currentBill!,_item.totalPaid!);
+                                          _showChangeStatus(true,_lastBillId,_item.currentBill!,_item.totalPaid!,i);
                                         } else {
-                                          _showChangeStatus(false,_item.id!,_item.currentBill!,_item.totalPaid!);
+                                          _showChangeStatus(false,_item.id!,_item.currentBill!,_item.totalPaid!,i);
                                         }
                                       },
                                       data: _item,
@@ -246,7 +248,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
     );
   }
 
-  void _showChangeStatus(bool userCollection,String? id,int currentBill,int totalPaid){
+  void _showChangeStatus(bool userCollection,String? id,int currentBill,int totalPaid,int? index){
     showModalBottomSheet(context: context,isScrollControlled: true,shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(10))
     ), builder: (context)=>Padding(
@@ -271,7 +273,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                 onTap:_totalPaidCtrl.text.isEmpty?null: (){
                   _showDialogConfirmation(
                     totalPaid: totalPaid,currentBill: currentBill,
-                    userCollection: userCollection
+                    userCollection: userCollection,index: index,id: id
                   );
                 },
                 child: Container(
@@ -291,7 +293,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
     ));
   }
 
-  void _showDialogConfirmation({int? currentBill,int? totalPaid,bool? userCollection,String? id}){
+  void _showDialogConfirmation({int? currentBill,int? totalPaid,bool? userCollection,String? id,int? index}){
     showDialog(context: context, builder: (context)=>AlertDialog(
       title: Text('Konfirmasi pembayaran'),
       content: Text('${Helper.formatCurrency(int.parse(_totalPaidCtrl.text))}',style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
@@ -307,12 +309,12 @@ class _UserDataScreenState extends State<UserDataScreen> {
             } else if (currentBill == _res) {
               context.read<UpdatePaymentStatusCubit>().updateStatus(
                 uid: widget.uid, status: true,userCollection: userCollection!,id: id == null?_lastBillId:id,
-                totalPaid:int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,
+                totalPaid:int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,index: index
               );
             } else {
               context.read<UpdatePaymentStatusCubit>().updateStatus(
                 uid: widget.uid, status: false,userCollection: userCollection!,id: id == null?_lastBillId:id,
-                totalPaid: int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,
+                totalPaid: int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,index: index
               );
             }
           },

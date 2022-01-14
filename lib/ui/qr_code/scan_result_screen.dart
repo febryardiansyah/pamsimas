@@ -26,11 +26,12 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
   String _category = '';
   bool _isLastBillManual = false;
   final _lastBillManualCtrl = TextEditingController();
-  String? _lastBill;
   DateTime _currentDate = DateTime.now();
   TextEditingController _currentYear = TextEditingController();
   List<String> _monthList = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   TextEditingController _inputCtrl = TextEditingController();
+  int? _lastUsage;
+  int? _lastBill;
   int _totalBill = 0;
 
   @override
@@ -61,8 +62,9 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
           listener: (context, state) {
             if (state is GetUserByUidSuccess) {
               setState(() {
-                _lastBillManualCtrl.text = state.data?.bill == null?'': state.data!.bill!.currentUsage!;
-                _lastBill = state.data?.bill == null?null: state.data!.bill!.currentUsage!;
+                _lastBillManualCtrl.text = state.data?.bill == null?'': state.data!.bill!.currentUsage!.toString();
+                _lastUsage = state.data?.bill == null?null: state.data!.bill!.currentUsage!;
+                _lastBill = state.data?.bill == null?null:state.data!.bill!.currentBill!;
               });
             }
           },
@@ -187,8 +189,8 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                               SizedBox(height: 30,),
                               GestureDetector(
                                 onTap:_inputCtrl.text.isEmpty || _selectedMonth == null || _currentYear.text.isEmpty?null: (){
-                                  int _bill = _calculateBill();
-                                  _showCalculationResult(_bill);
+                                  int _currentBill = _calculateBill();
+                                  _showCalculationResult(_currentBill);
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
@@ -238,7 +240,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
     }
     int _input = int.parse(_inputCtrl.text);
     late int _mt;
-    if (_lastBill == null) {
+    if (_lastUsage == null) {
       print('LAST BILL == NULL');
       if (_lastBillManualCtrl.text.isNotEmpty) {
         print('LAST BILL MANUAL is NOT EMPTY');
@@ -249,7 +251,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
       }
     }else{
       print('LAST BILL NOT NUlLL');
-      _mt = _input - int.parse(_lastBill!);
+      _mt = _input - _lastUsage!;
     }
     int _res = (_mt ~/ 20).toInt();
     int _bill = _priceByCategory * _res;
@@ -259,7 +261,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
     return _bill;
   }
 
-  void _showCalculationResult(int bill){
+  void _showCalculationResult(int currentBill){
     showDialog(context: context, builder: (context)=>AlertDialog(
       title: Text('Konfirmasi tagihan'),
       content: Text('${Helper.formatCurrency(_totalBill)}',style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
@@ -269,8 +271,8 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
           onPressed: (){
             Navigator.pop(context);
             context.read<InputUserBillCubit>().inputBill(
-              uid: widget.uid!, currentBill: bill, month: _selectedMonth!,year: _currentYear.text,
-              usage: _inputCtrl.text
+              uid: widget.uid!, currentBill: currentBill, month: _selectedMonth!,year: _currentYear.text,
+              currentUsage: int.parse(_inputCtrl.text),lastUsage: _lastUsage,lastBill: _lastBill
             );
           },
           style: ElevatedButton.styleFrom(

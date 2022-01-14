@@ -21,12 +21,12 @@ class BillModel {
   String? id;
   int? currentBill;
   int? lastBill;
+  int? currentUsage;
   int? lastUsage;
   int? totalPaid;
   String? month;
   bool? isPayed;
   String? year;
-  String? currentUsage;
   DateTime? createdAt;
 
   BillModel({
@@ -42,7 +42,7 @@ class BillModel {
       month: json['month'] == null?null:json['month'],
       isPayed: json['isPayed'] == null?null:json['isPayed'],
       year: json['year'] == null?null:json['year'],
-      currentUsage: json['usage'] == null?null:json['usage'],
+      currentUsage: json['currentUsage'] == null?null:json['currentUsage'],
       lastBill: json['lastBill'] == null?null:json['lastBill'],
       lastUsage: json['lastUsage'] == null?null:json['lastBill']
       // createdAt: json['createdAt'] == null?null:DateTime.parse(json['createdAt'])

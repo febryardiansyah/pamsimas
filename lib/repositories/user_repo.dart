@@ -48,19 +48,22 @@ class UserRepo{
     }
   }
 
-  Future<ResponseModel> inputUserBill({required String uid,required int currentBill,required String month,required String year,required String usage})async{
+  Future<ResponseModel> inputUserBill({
+    required String uid,required int currentBill,required String month,required String year,required int currentUsage,
+    int? lastBill,int? lastUsage
+  })async{
     try{
       String _id = '${_uuid.v1()}$uid${DateTime.now().millisecondsSinceEpoch}';
       await _fireStore.collection('users').doc(uid).update({
         'bill':{
-          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,'usage':usage,'createdAt':DateTime.now(),'id':_id,
-          'totalPaid':0,
+          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,'currentUsage':currentUsage,'createdAt':DateTime.now(),'id':_id,
+          'totalPaid':0,'lastBill':lastBill ?? 0,'lastUsage':lastUsage??0
         }
       });
       print('BILL DOC ID ==> $_id');
       final _billData = BillModel(
-        currentBill: currentBill,month: month,isPayed: false,year: year,currentUsage: usage,createdAt: DateTime.now(),id:_id,
-        totalPaid: 0,
+        currentBill: currentBill,month: month,isPayed: false,year: year,currentUsage: currentUsage,createdAt: DateTime.now(),id:_id,
+        totalPaid: 0,lastBill: lastBill ?? 0,lastUsage: lastUsage ?? 0
       );
       await _fireStore.collection('history').doc(uid).collection('bills').doc(_id).set(_billData.toMap());
 

@@ -11,12 +11,12 @@ class UpdatePaymentStatusCubit extends Cubit<UpdatePaymentStatusState> {
 
   Future<void> updateStatus({
     required String uid,required bool status,required bool userCollection,required int totalPaid,String? id,
-    required int totalCurrentPaid
+    required int totalCurrentPaid,int? index
   })async{
     emit(UpdatePaymentStatusLoading());
     try{
       final _res = await _repo.updatePaymentStatus(
-        status: status, uid: uid,userCollection: userCollection,totalPaid: totalPaid,totalCurrentPaid: totalCurrentPaid,id: id,);
+        status: status, uid: uid,userCollection: userCollection,totalPaid: totalPaid,totalCurrentPaid: totalCurrentPaid,id: id,index: index);
       if (_res.status!) {
         emit(UpdatePaymentStatusSuccess(msg: _res.msg!));
       } else {

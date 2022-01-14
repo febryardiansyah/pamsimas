@@ -9,10 +9,13 @@ class InputUserBillCubit extends Cubit<InputUserBillState> {
   InputUserBillCubit() : super(InputUserBillInitial());
   final _repo = UserRepo();
 
-  Future<void> inputBill({required String uid,required int currentBill,required String month,required String year,required String usage})async{
+  Future<void> inputBill({
+    required String uid,required int currentBill,required String month,required String year,required int currentUsage,int? lastBill,int? lastUsage,
+  })async{
     emit(InputUserBillLoading());
     try{
-      final _res = await _repo.inputUserBill(uid: uid, currentBill: currentBill, month: month,year: year,usage: usage);
+      final _res = await _repo.inputUserBill(uid: uid, currentBill: currentBill, month: month,year: year,currentUsage: currentUsage,lastBill: lastBill,
+      lastUsage: lastUsage);
       if (_res.status!) {
         emit(InputUserBillSuccess(msg: _res.msg));
       } else {

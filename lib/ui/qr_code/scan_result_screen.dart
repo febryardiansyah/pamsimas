@@ -61,8 +61,8 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
           listener: (context, state) {
             if (state is GetUserByUidSuccess) {
               setState(() {
-                _lastBillManualCtrl.text = state.data?.bill == null?'': state.data!.bill!.usage!;
-                _lastBill = state.data?.bill == null?null: state.data!.bill!.usage!;
+                _lastBillManualCtrl.text = state.data?.bill == null?'': state.data!.bill!.currentUsage!;
+                _lastBill = state.data?.bill == null?null: state.data!.bill!.currentUsage!;
               });
             }
           },
@@ -110,7 +110,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                     children: [
                                       Text(_data.name!,style: TextStyle(fontSize: 20),),
                                       SizedBox(height: 8,),
-                                      Text('Meteran Lalu : ${_data.bill == null ?'-':_data.bill!.usage}'),
+                                      Text('Meteran Lalu : ${_data.bill == null ?'-':_data.bill!.currentUsage}'),
                                     ],
                                   ),
                                   Spacer(),

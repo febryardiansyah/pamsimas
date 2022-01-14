@@ -25,7 +25,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   void initState() {
     super.initState();
     _products = [
-      Product(1, 'Tagihan pemakain air bersih', data.category!,'${data.bill!.usage!} m3', data.bill!.currentBill!)
+      Product(1, 'Tagihan pemakain air bersih', data.category!,'${data.bill!.currentUsage!} m3', data.bill!.currentBill!)
     ];
   }
   @override

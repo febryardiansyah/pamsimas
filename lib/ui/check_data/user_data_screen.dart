@@ -142,7 +142,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                           children: [
                                             Text('Pemakaian bulan ini',style: TextStyle(color: BaseColor.grey),),
                                             Spacer(),
-                                            Text('${_data.bill!.usage} m3')
+                                            Text('${_data.bill!.currentUsage} m3')
                                           ],
                                         ),
                                         SizedBox(height: 8,),

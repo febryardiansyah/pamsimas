@@ -10,6 +10,7 @@ import 'package:pamsimas/components/build_category.dart';
 import 'package:pamsimas/helpers/base_color.dart';
 import 'package:pamsimas/helpers/base_string.dart';
 import 'package:pamsimas/helpers/helper.dart';
+import 'package:pamsimas/model/user_model.dart';
 
 class ScanResultScreen extends StatefulWidget {
   final String? uid;
@@ -25,6 +26,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
   String? _selectedMonth;
   String _category = '';
   bool _isLastBillManual = false;
+  UserModel? _userData;
   final _lastBillManualCtrl = TextEditingController();
   DateTime _currentDate = DateTime.now();
   TextEditingController _currentYear = TextEditingController();
@@ -65,6 +67,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                 _lastBillManualCtrl.text = state.data?.bill == null?'': state.data!.bill!.currentUsage!.toString();
                 _lastUsage = state.data?.bill == null?null: state.data!.bill!.currentUsage!;
                 _lastBill = state.data?.bill == null?null:state.data!.bill!.currentBill!;
+                _userData = state.data;
               });
             }
           },
@@ -272,7 +275,8 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
             Navigator.pop(context);
             context.read<InputUserBillCubit>().inputBill(
               uid: widget.uid!, currentBill: currentBill, month: _selectedMonth!,year: _currentYear.text,
-              currentUsage: int.parse(_inputCtrl.text),lastUsage: _lastUsage,lastBill: _lastBill
+              currentUsage: int.parse(_inputCtrl.text),lastUsage: _lastUsage,lastBill: _lastBill,
+              userData: _userData!
             );
           },
           style: ElevatedButton.styleFrom(

@@ -53,7 +53,7 @@ class _HistoryBillScreenState extends State<HistoryBillScreen> {
                 child: ListView.builder(
                   itemCount: _data.length,
                   itemBuilder: (context,i){
-                    final _item = _data[i];
+                    final _item = _data[i].bill!;
                     return Padding(
                       padding: EdgeInsets.only(bottom: 10),
                       child: StatusCard(

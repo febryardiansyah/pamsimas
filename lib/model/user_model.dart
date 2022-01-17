@@ -27,5 +27,6 @@ class UserModel{
     'address':address,
     'category':category,
     'role':role,
+    'bill':bill?.toMap()
   };
 }

@@ -10,6 +10,7 @@ import 'package:pamsimas/components/build_category.dart';
 import 'package:pamsimas/components/status_card.dart';
 import 'package:pamsimas/helpers/base_color.dart';
 import 'package:pamsimas/helpers/helper.dart';
+import 'package:pamsimas/model/user_model.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UserDataScreen extends StatefulWidget {
@@ -26,10 +27,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
   final _refreshController = RefreshController(initialRefresh: false);
   bool _hasReachedMax = false;
   String? _lastBillId;
-  List<_StatusModel> _statusList = [
-    _StatusModel('Sudah Bayar', true),
-    _StatusModel('Belum Bayar', false),
-  ];
+  UserModel? _userData;
 
   @override
   void initState() {
@@ -206,7 +204,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                             }
                             if (state is GetHistoryBillSuccess) {
                               final _data = state.data!;
-                              _lastBillId = _data.isEmpty?null:_data[0].id;
+                              _lastBillId = _data.isEmpty?null:_data[0].bill!.id;
                               return _data.isEmpty?Center(
                                 child: Text('Masih Kosong'),
                               ): ListView.builder(
@@ -214,7 +212,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                 physics: ClampingScrollPhysics(),
                                 itemCount: _data.length,
                                 itemBuilder: (context,i){
-                                  final _item = _data[i];
+                                  final _item = _data[i].bill!;
                                   return Padding(
                                     padding: EdgeInsets.only(bottom: 10),
                                     child: StatusCard(

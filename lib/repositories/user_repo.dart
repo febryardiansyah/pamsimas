@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pamsimas/helpers/helper.dart';
 import 'package:pamsimas/model/ResponseModel.dart';
 import 'package:pamsimas/model/history_model.dart';
+import 'package:pamsimas/model/user_model.dart';
 import 'package:uuid/uuid.dart';
 
 class UserRepo{
@@ -50,7 +51,7 @@ class UserRepo{
 
   Future<ResponseModel> inputUserBill({
     required String uid,required int currentBill,required String month,required String year,required int currentUsage,
-    int? lastBill,int? lastUsage
+    int? lastBill,int? lastUsage,required UserModel userData,
   })async{
     try{
       String _id = '${_uuid.v1()}$uid${DateTime.now().millisecondsSinceEpoch}';
@@ -63,9 +64,17 @@ class UserRepo{
       print('BILL DOC ID ==> $_id');
       final _billData = BillModel(
         currentBill: currentBill,month: month,isPayed: false,year: year,currentUsage: currentUsage,createdAt: DateTime.now(),id:_id,
-        totalPaid: 0,lastBill: lastBill ?? 0,lastUsage: lastUsage ?? 0
+        totalPaid: 0,lastBill: lastBill ?? 0,lastUsage: lastUsage ?? 0,
       );
+
+      final _userData = UserModel(
+        name: userData.name,address: userData.address,bill: _billData,
+        category: userData.category,uid: userData.uid,role: userData.role
+      );
+
       await _fireStore.collection('history').doc(uid).collection('bills').doc(_id).set(_billData.toMap());
+
+      await _fireStore.collection('reports').doc(_id).set(_userData.toMap());
 
       return ResponseModel(
         status: true,msg: 'Berhasil',data: null,

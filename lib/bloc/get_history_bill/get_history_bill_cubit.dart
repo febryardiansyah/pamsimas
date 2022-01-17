@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pamsimas/helpers/base_string.dart';
 import 'package:pamsimas/model/history_model.dart';
+import 'package:pamsimas/model/user_model.dart';
 import 'package:pamsimas/repositories/profile_repo.dart';
 
 part 'get_history_bill_state.dart';
@@ -16,7 +17,7 @@ class GetHistoryBillCubit extends Cubit<GetHistoryBillState> {
       int _limit = 10;
       final _res = await _repo.getHistoryByUid(uid: uid,limit: _limit);
       if (_res.status!) {
-        final _data = List<BillModel>.from(_res.data.map((x)=>BillModel.fromMap(x.data())));
+        final _data = List<UserModel>.from(_res.data.map((x)=>UserModel.fromMap(x.data())));
         emit(GetHistoryBillSuccess(data: _data,limit: _limit+10,hasReachedMax: false));
       } else {
         emit(GetHistoryBillFailure(msg: _res.msg));
@@ -34,7 +35,7 @@ class GetHistoryBillCubit extends Cubit<GetHistoryBillState> {
         int _limit = _currentState.limit!;
         final _res = await _repo.getHistoryByUid(uid: uid,limit: _limit);
         if (_res.status!) {
-          final _data = List<BillModel>.from(_res.data.map((x)=>BillModel.fromMap(x.data())));
+          final _data = List<UserModel>.from(_res.data.map((x)=>UserModel.fromMap(x.data())));
           print('LENGTH ===> ${_data.length}');
           emit(_data.length == _currentState.data!.length?_currentState.copyWith(data: _currentState.data,hasReachedMax: true,limit: _currentState.limit):
           GetHistoryBillSuccess(data: _data,limit: _limit+10,hasReachedMax: false));

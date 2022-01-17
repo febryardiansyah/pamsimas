@@ -116,7 +116,6 @@ class UserRepo{
   Future<ResponseModel> getReport({required String month,required String year,required String rt,required String rw,required int limit})async{
     try{
       final _res = await _fireStore.collection('reports')
-          .limit(limit)
           .where('bill.month',isEqualTo: month)
           .where('bill.year',isEqualTo: year)
           .where('address',isEqualTo: 'RT.$rt / RW.$rw')

@@ -15,8 +15,6 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-  final _refreshCtrl = RefreshController(initialRefresh: false);
-  bool _hasReachedMax = false;
   List<String> _rtList = [];
   List<String> _rwList = [];
   String? _selectedRT;
@@ -37,7 +35,6 @@ class _ReportScreenState extends State<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _hasReachedMax = context.select<GetReportCubit,bool>((bloc) => bloc.state is GetReportSuccess?(bloc.state as GetReportSuccess).hasReachedMax:false);
     return WillPopScope(
       onWillPop: ()async{
         context.read<GetReportCubit>().clear();
@@ -50,186 +47,203 @@ class _ReportScreenState extends State<ReportScreen> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: SmartRefresher(
-            controller: _refreshCtrl,
-            enablePullDown: false,
-            enablePullUp: _hasReachedMax?false:true,
-            onLoading: (){
-              context.read<GetReportCubit>().onLoading(
-                month: _selectedMonth!, year: _currentYear.text, rt: _selectedRT!, rw: _selectedRW!,
-              );
-            },
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Card(
-                    child: ListTile(
-                      leading: Icon(Icons.assignment),
-                      title: Text('Rekap'),
-                    ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Card(
+                  child: ListTile(
+                    leading: Icon(Icons.assignment),
+                    title: Text('Rekap'),
                   ),
-                  SizedBox(height: 8,),
-                  Row(
-                    children: [
-                      Text('Laporan Bulanan',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: _showFilter,
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          width: 100,
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 1),
-                              borderRadius: BorderRadius.circular(8)
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.filter_list),
-                              SizedBox(width: 5,),
-                              Text('Filter')
-                            ],
-                          ),
+                ),
+                SizedBox(height: 8,),
+                Row(
+                  children: [
+                    Text('Laporan Bulanan',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                    Spacer(),
+                    GestureDetector(
+                      onTap: _showFilter,
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        width: 100,
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 1),
+                            borderRadius: BorderRadius.circular(8)
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.filter_list),
+                            SizedBox(width: 5,),
+                            Text('Filter')
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 8,),
-                  BlocBuilder<GetReportCubit, GetReportState>(
-                    builder: (context, state) {
-                      if (state is GetReportLoading) {
-                        return Center(child: CupertinoActivityIndicator(),);
-                      }
-                      if (state is GetReportFailure) {
-                        return Center(child: Text(state.msg),);
-                      }
-                      if (state is GetReportSuccess) {
-                        final _data = state.data;
-                        return _data.isEmpty?Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 20),
-                            child: Text('Data masih kosong'),
-                          ),
-                        ): Column(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                      width: 1,color: BaseColor.red
-                                    )
-                                  ),
-                                  child: Center(
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.print,color: BaseColor.red,),
-                                        SizedBox(width: 4,),
-                                        Text('Download',style: TextStyle(color: BaseColor.red),)
-                                      ],
-                                    ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8,),
+                BlocBuilder<GetReportCubit, GetReportState>(
+                  builder: (context, state) {
+                    if (state is GetReportLoading) {
+                      return Center(child: CupertinoActivityIndicator(),);
+                    }
+                    if (state is GetReportFailure) {
+                      return Center(child: Text(state.msg),);
+                    }
+                    if (state is GetReportSuccess) {
+                      final _data = state.data;
+                      return _data.isEmpty?Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Text('Data masih kosong'),
+                        ),
+                      ): Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    width: 1,color: BaseColor.red
+                                  )
+                                ),
+                                child: Center(
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.print,color: BaseColor.red,),
+                                      SizedBox(width: 4,),
+                                      Text('Download',style: TextStyle(color: BaseColor.red),)
+                                    ],
                                   ),
                                 ),
-                                Spacer(),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Periode : $_selectedMonth ${_currentYear.text}'),
-                                    Text('Wilayah : RT.$_selectedRT / RW.$_selectedRW')
-                                  ],
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 8,),
-                            ListView.builder(
-                              itemCount: _data.length,
-                              shrinkWrap: true,
-                              physics: ClampingScrollPhysics(),
-                              itemBuilder: (context,i){
-                                final _item = _data[i];
-                                return Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)
+                              ),
+                              Spacer(),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Periode : $_selectedMonth ${_currentYear.text}'),
+                                  Text('Wilayah : RT.$_selectedRT / RW.$_selectedRW')
+                                ],
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 8,),
+                          ListView.builder(
+                            itemCount: _data.length,
+                            shrinkWrap: true,
+                            physics: ClampingScrollPhysics(),
+                            itemBuilder: (context,i){
+                              final _item = _data[i];
+                              return Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)
+                                ),
+                                child: Container(
+                                  margin: EdgeInsets.all(8),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(_item.name!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                                          Spacer(),
+                                          BuildCategory(category: _item.category,)
+                                        ],
+                                      ),
+                                      SizedBox(height: 4,),
+                                      Text('(${_item.uid})',style: TextStyle(color: BaseColor.grey),),
+                                      SizedBox(height: 8,),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Meteran : '),
+                                          SizedBox(width: 12,),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Lalu'),
+                                              Text('${_item.bill!.lastUsage}',style: TextStyle(fontWeight: FontWeight.bold),),
+                                            ],
+                                          ),
+                                          SizedBox(width: 24,),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Sekarang'),
+                                              Text('${_item.bill!.currentUsage}',style: TextStyle(fontWeight: FontWeight.bold),),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 8,),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Tagihan : '),
+                                          SizedBox(width: 12,),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Lalu'),
+                                              Text('${Helper.formatCurrency(_item.bill!.lastBill!)}',style: TextStyle(fontWeight: FontWeight.bold),),
+                                            ],
+                                          ),
+                                          SizedBox(width: 24,),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Sekarang'),
+                                              Text('${Helper.formatCurrency(_item.bill!.currentBill!)}',style: TextStyle(fontWeight: FontWeight.bold),),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 8,),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Total Tagihan : '),
+                                          SizedBox(width: 12,),
+                                          Text('${Helper.formatCurrency(_item.bill!.lastBill! + _item.bill!.currentBill!)}',style: TextStyle(fontWeight: FontWeight.bold),)
+                                        ],
+                                      ),
+                                      SizedBox(height: 8,),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Dibayar : '),
+                                          SizedBox(width: 12,),
+                                          Text('${Helper.formatCurrency(_item.bill!.totalPaid!)}',style: TextStyle(fontWeight: FontWeight.bold),)
+                                        ],
+                                      ),
+                                      SizedBox(height: 8,),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Sisa : '),
+                                          SizedBox(width: 12,),
+                                          Text('${Helper.formatCurrency((_item.bill!.lastBill! + _item.bill!.currentBill!) - _item.bill!.totalPaid!)}',style: TextStyle(fontWeight: FontWeight.bold),)
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                  child: Container(
-                                    margin: EdgeInsets.all(8),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(_item.name!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
-                                            Spacer(),
-                                            BuildCategory(category: _item.category,)
-                                          ],
-                                        ),
-                                        SizedBox(height: 4,),
-                                        Text('(${_item.uid})',style: TextStyle(color: BaseColor.grey),),
-                                        SizedBox(height: 8,),
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text('Meteran : '),
-                                            SizedBox(width: 12,),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text('Lalu'),
-                                                Text('${_item.bill!.lastUsage}',style: TextStyle(fontWeight: FontWeight.bold),),
-                                              ],
-                                            ),
-                                            SizedBox(width: 24,),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text('Sekarang'),
-                                                Text('${_item.bill!.currentUsage}',style: TextStyle(fontWeight: FontWeight.bold),),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 8,),
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text('Tagihan : '),
-                                            SizedBox(width: 12,),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text('Lalu'),
-                                                Text('${Helper.formatCurrency(_item.bill!.lastBill!)}',style: TextStyle(fontWeight: FontWeight.bold),),
-                                              ],
-                                            ),
-                                            SizedBox(width: 24,),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text('Sekarang'),
-                                                Text('${Helper.formatCurrency(_item.bill!.currentBill!)}',style: TextStyle(fontWeight: FontWeight.bold),),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        );
-                      }
-                      return Padding(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Text('Belum ada data, silahkan filter terlebih dahulu.'),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       );
-                    },
-                  )
-                ],
-              ),
+                    }
+                    return Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text('Belum ada data, silahkan filter terlebih dahulu.'),
+                    );
+                  },
+                )
+              ],
             ),
           ),
         ),

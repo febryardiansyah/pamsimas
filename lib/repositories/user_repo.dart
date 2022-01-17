@@ -72,8 +72,6 @@ class UserRepo{
         category: userData.category,uid: userData.uid,role: userData.role
       );
 
-      await _fireStore.collection('history').doc(uid).collection('bills').doc(_id).set(_billData.toMap());
-
       await _fireStore.collection('reports').doc(_id).set(_userData.toMap());
 
       return ResponseModel(
@@ -113,6 +111,26 @@ class UserRepo{
     final _res = await FirebaseFirestore.instance.collection('address').doc(address).get();
     List<String>_data = List<String>.from(_res.data()!['value'].map((x)=>x));
     return _data;
+  }
+
+  Future<ResponseModel> getReport({required String month,required String year,required String rt,required String rw,required int limit})async{
+    try{
+      final _res = await _fireStore.collection('reports')
+          .limit(limit)
+          .where('bill.month',isEqualTo: month)
+          .where('bill.year',isEqualTo: year)
+          .where('address',isEqualTo: 'RT.$rt / RW.$rw')
+          .get();
+      print(_res.docs);
+      return ResponseModel(
+          msg: 'Data ditemukan',data: _res.docs,status: true
+      );
+    }on FirebaseException catch(e){
+      print(e);
+      return ResponseModel(
+          status: false,data: null,msg: Helper.getAuthErr(e.code)
+      );
+    }
   }
 
   Future<bool> _checkName(String name)async{

@@ -31,6 +31,7 @@ class ProfileRepo {
       final _res = await _fireStore
           .collection('reports')
           .where('uid',isEqualTo: _uid)
+          .orderBy('bill.createdAt',descending: true)
           .limit(limit).get();
       // print(_res.docs);
       return ResponseModel(
@@ -56,16 +57,11 @@ class ProfileRepo {
         await _fireStore.collection('users').doc(uid).update({
           'bill.isPayed':status,'bill.totalPaid':totalPaid+totalCurrentPaid
         });
-        await _fireStore.collection('history').doc(uid).collection('bills').doc(id).update({
-          'isPayed':status,'totalPaid':totalPaid+totalCurrentPaid
-        });
-      } else {
-        print('HISTORY COLLECTION');
-        await _fireStore.collection('history').doc(uid).collection('bills').doc(id).update({
-          'isPayed':status,'totalPaid':totalPaid+totalCurrentPaid
-        });
+
       }
-      // await _fireStore.collection('reports').doc();
+      await _fireStore.collection('reports').doc(id).update({
+        'bill.isPayed':status,'bill.totalPaid':totalPaid+totalCurrentPaid
+      });
       return ResponseModel(
           msg: 'Berhasil memperbaharui status pembayaran',data: null,status: true
       );

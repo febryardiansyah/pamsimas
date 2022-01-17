@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -28,9 +26,9 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
   final _nameCtrl = TextEditingController();
   List<String> _rtList = [];
   List<String> _rwList = [];
-  String? _selectedRole;
   String? _selectedRT;
   String? _selectedRW;
+  String? _selectedRole;
   _CategoryModel? _selectedCategory;
 
   Future<void> _setAddress()async{

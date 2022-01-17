@@ -15,6 +15,7 @@ import 'package:pamsimas/helpers/routes.dart';
 
 import 'bloc/get_data/get_data_cubit.dart';
 import 'bloc/get_profile/get_profile_cubit.dart';
+import 'bloc/get_report/get_report_cubit.dart';
 import 'bloc/get_user_by_uid/get_user_by_uid_cubit.dart';
 
 void main() async{
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_)=>GetHistoryBillCubit()),
         BlocProvider(create: (_)=>UpdatePaymentStatusCubit()),
         BlocProvider(create: (_)=>ChangePasswordCubit()),
+        BlocProvider(create: (_)=>GetReportCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

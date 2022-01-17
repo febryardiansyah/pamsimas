@@ -33,9 +33,13 @@ class _HomeScreenState extends State<HomeScreen> {
       final _res = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
       print(_res);
+      if (_res.isEmpty) {
+        Navigator.pop(context);
+      }
       Navigator.pushNamed(context, rScanResult,arguments: _res);
     }catch(e){
-      print(e);
+      print('SCAN ERROR ==> $e');
+      Navigator.pop(context);
     }
   }
   
@@ -65,6 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
       HomeModel(
         onTap: ()=>_scanQr(context),
         title: 'Input Meteran',color: Colors.lightBlue,icon: BaseString.iMeter,
+      ),
+      HomeModel(
+        onTap: ()=>Navigator.pushNamed(context, rReport),
+        title: 'Laporan',color: Colors.lightBlue,icon: BaseString.iMeter,
       ),
     ];
     _employeeList = [

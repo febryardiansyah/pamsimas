@@ -55,7 +55,7 @@ class BillModel {
     'month':month,
     'isPayed':isPayed,
     'year':year,
-    'usage':currentUsage,
+    'currentUsage':currentUsage,
     'createdAt':createdAt,
     'totalPaid':totalPaid,
     'lastBill':lastBill,

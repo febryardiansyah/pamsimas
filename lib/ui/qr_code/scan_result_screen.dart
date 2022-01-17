@@ -57,6 +57,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
             EasyLoading.showError(state.msg!);
           }
           if (state is InputUserBillSuccess) {
+            context.read<GetUserByUidCubit>().fetchUserByUid(widget.uid!);
             EasyLoading.showSuccess(state.msg!);
           }
         },

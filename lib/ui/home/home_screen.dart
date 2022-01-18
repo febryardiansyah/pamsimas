@@ -63,16 +63,16 @@ class _HomeScreenState extends State<HomeScreen> {
         title: 'Cek Data',color: Colors.lightBlue,icon: BaseString.iData,
       ),
       HomeModel(
+        onTap: ()=>Navigator.pushNamed(context, rReport),
+        title: 'Laporan',color: Colors.lightBlue,icon: BaseString.iReport,
+      ),
+      HomeModel(
         onTap: ()=>Navigator.pushNamed(context, rAddCustomer),
         title: 'Tambah Pengguna',color: Colors.lightBlue,icon: BaseString.iAddUser,
       ),
       HomeModel(
         onTap: ()=>_scanQr(context),
         title: 'Input Meteran',color: Colors.lightBlue,icon: BaseString.iMeter,
-      ),
-      HomeModel(
-        onTap: ()=>Navigator.pushNamed(context, rReport),
-        title: 'Laporan',color: Colors.lightBlue,icon: BaseString.iMeter,
       ),
     ];
     _employeeList = [

@@ -17,15 +17,13 @@ class InvoiceScreen extends StatefulWidget {
   _InvoiceScreenState createState() => _InvoiceScreenState();
 }
 class _InvoiceScreenState extends State<InvoiceScreen> {
-  final lorem = pw.LoremText();
-
-  List<Product> _products = <Product>[];
+  List<_ProductModel> _products = <_ProductModel>[];
   UserModel get data => widget.data;
   @override
   void initState() {
     super.initState();
     _products = [
-      Product(1, 'Tagihan pemakain air bersih', data.category!,'${data.bill!.currentUsage!} m3', data.bill!.currentBill!)
+      _ProductModel(1, 'Tagihan pemakain air bersih', data.category!,'${data.bill!.currentUsage!} m3', data.bill!.currentBill!)
     ];
   }
   @override
@@ -258,8 +256,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   }
 }
 
-class Product {
-  Product(this.no,this.detail, this.category, this.usage, this.total,);
+class _ProductModel {
+  _ProductModel(this.no,this.detail, this.category, this.usage, this.total,);
 
   final int no;
   final String detail;

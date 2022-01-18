@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pamsimas/bloc/get_history_bill/get_history_bill_cubit.dart';
 import 'package:pamsimas/components/status_card.dart';
+import 'package:pamsimas/helpers/routes.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HistoryBillScreen extends StatefulWidget {
@@ -58,6 +59,7 @@ class _HistoryBillScreenState extends State<HistoryBillScreen> {
                       padding: EdgeInsets.only(bottom: 10),
                       child: StatusCard(
                         data: _item,
+                        onTap: ()=>Navigator.pushNamed(context, rInvoice,arguments: _data[i]),
                       ),
                     );
                   },

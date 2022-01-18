@@ -44,7 +44,7 @@ class BillModel {
       year: json['year'] == null?null:json['year'],
       currentUsage: json['currentUsage'] == null?null:json['currentUsage'],
       lastBill: json['lastBill'] == null?null:json['lastBill'],
-      lastUsage: json['lastUsage'] == null?null:json['lastBill']
+      lastUsage: json['lastUsage'] == null?null:json['lastUsage']
       // createdAt: json['createdAt'] == null?null:DateTime.parse(json['createdAt'])
     );
   }

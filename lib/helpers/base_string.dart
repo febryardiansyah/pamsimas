@@ -14,6 +14,7 @@ class BaseString {
   static String iAddUser = "assets/icons/addUser.svg";
   static String iMeter = "assets/icons/meter.svg";
   static String iWaterTap = "assets/icons/water-tap.svg";
+  static String iReport = "assets/icons/report.svg";
 
   static String token = "token";
 }

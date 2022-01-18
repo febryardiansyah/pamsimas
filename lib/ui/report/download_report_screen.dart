@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:pamsimas/components/build_category.dart';
 import 'package:pamsimas/helpers/helper.dart';
 import 'package:pamsimas/model/user_model.dart';
 import 'package:pdf/pdf.dart';
@@ -9,7 +9,7 @@ import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class DownloadReportScreen extends StatefulWidget {
-  final List<UserModel> data;
+  final DownloadReportParams data;
 
   const DownloadReportScreen({Key? key,required this.data}) : super(key: key);
   @override
@@ -17,26 +17,42 @@ class DownloadReportScreen extends StatefulWidget {
 }
 
 class _DownloadReportScreenState extends State<DownloadReportScreen> {
-  List<_ProductModel> _products = <_ProductModel>[];
-  List<UserModel> get data => widget.data;
+  DownloadReportParams get data => widget.data;
+
+  int _lastUsage = 0;
+  int _currentUsage = 0;
+  int _vol = 0;
+  int _lastBill = 0;
+  int _currentBill = 0;
+  int _totalBill = 0;
+  int _totalPaid = 0;
+  int _remain = 0;
 
   @override
   void initState() {
     super.initState();
-    _products = [
-      _ProductModel(10, '100', 'P', 'Febry', '100', '200', 2, 29, 30, 10, 2, 34)
-    ];
+    final _data = data.user;
+    for(int i =0;i<_data.length;i++){
+      _lastUsage += _data[i].bill!.lastUsage!;
+      _currentUsage += _data[i].bill!.currentUsage!;
+      _vol += _data[i].bill!.currentUsage! - _data[i].bill!.lastUsage!;
+      _lastBill += _data[i].bill!.lastBill!;
+      _currentBill += _data[i].bill!.currentBill!;
+      _totalBill += _data[i].bill!.lastBill!+ _data[i].bill!.currentBill!;
+      _totalPaid += _data[i].bill!.totalPaid!;
+      _remain += (_data[i].bill!.lastBill!+_data[i].bill!.currentBill!) - _data[i].bill!.totalPaid!;
+    }
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Download Laporan'),
+        title: Text('Laporan tagihan'),
         elevation: 0,
       ),
       body: PdfPreview(
         build: (format)async=>_generatePdf(format),
-        pdfFileName: 'Laporan tagihan November 2021',
+        pdfFileName: 'Laporan tagihan ${data.date}',
         previewPageMargin: EdgeInsets.all(4),
       ),
     );
@@ -52,7 +68,7 @@ class _DownloadReportScreenState extends State<DownloadReportScreen> {
         // orientation: pw.PageOrientation.landscape,
         build: (context) =>[
           pw.SizedBox(height: 20),
-          _contentTable(context),
+          _buildContent(context),
           pw.SizedBox(height: 20),
           _contentFooter(context),
         ],
@@ -73,236 +89,320 @@ class _DownloadReportScreenState extends State<DownloadReportScreen> {
             pw.SizedBox(height: 12),
             pw.Row(
               children: [
-                pw.Text('Periode : November 2021'),
+                pw.Text('Periode : ${data.date}'),
                 pw.Spacer(),
-                pw.Text('Wilayah : Rt.004/Rw.002')
+                pw.Text('Wilayah : ${data.address}')
               ]
             )
           ],
         )
     );
   }
-  pw.Widget _contentTable(pw.Context context) {
-    const tableHeaders = [
-      'Id',
-      'Gol',
-      'Nama',
-      'Penggunaan Lalu',
-      'Penggunaan Skrng',
-      'Vol',
-      'Tagihan Lalu',
-      'Tagihan Skrng',
-      'Total',
-      'Dibayar',
-      'Sisa',
-    ];
-
-    return pw.Table.fromTextArray(
-      border: null,
-      cellAlignment: pw.Alignment.centerLeft,
-      headerDecoration: pw.BoxDecoration(
-        borderRadius: const pw.BorderRadius.all(pw.Radius.circular(2)),
-        color: PdfColors.blue,
-      ),
-      headerHeight: 25,
-      cellHeight: 40,
-      cellAlignments: {
-        0: pw.Alignment.centerLeft,
-        1: pw.Alignment.centerLeft,
-        2: pw.Alignment.center,
-        3: pw.Alignment.center,
-        4: pw.Alignment.centerRight,
-      },
-      headerStyle: pw.TextStyle(
-        color: PdfColors.white,
-        fontSize: 14,
-        fontWeight: pw.FontWeight.bold,
-      ),
-      cellStyle: pw.TextStyle(
-        color: PdfColors.black,
-        fontSize: 14,
-      ),
-      rowDecoration: pw.BoxDecoration(
-        border: pw.Border(
-          bottom: pw.BorderSide(
-            color: PdfColors.green,
-            width: .5,
-          ),
-        ),
-      ),
-      headers: List<String>.generate(tableHeaders.length, (col) => tableHeaders[col],),
-      data: List<List<String>>.generate(_products.length, (row) => List<String>.generate(tableHeaders.length, (col) => _products[row].getIndex(col),),),
-    );
-  }
-  pw.Widget _contentFooter(pw.Context context) {
-    return pw.Row(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        pw.Expanded(
-          flex: 2,
+  pw.Widget _buildContent(pw.Context context){
+    return pw.ListView.separated(
+      separatorBuilder: (context,i)=>pw.Divider(),
+      itemCount: data.user.length,
+      itemBuilder: (context,i){
+        final _item = data.user[i];
+        return pw.Container(
+          margin: pw.EdgeInsets.all(8),
           child: pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Row(
                 children: [
-                  pw.Text(
-                    'Setoran tagihan : ',
-                    style: pw.TextStyle(
-                        color: PdfColors.black,
-                        fontStyle: pw.FontStyle.italic
-                    ),
-                  ),
-                  pw.SizedBox(width: 4),
-                  pw.Text(
-                    'Rp.',
-                    style: pw.TextStyle(
-                        color: PdfColors.black,
-                    ),
-                  ),
-                ]
+                  pw.Text('${i+1}. ${_item.name!}',style: pw.TextStyle(fontWeight: pw.FontWeight.bold,fontSize: 16),),
+                  pw.SizedBox(width: 8),
+                  pw.Text('Golongan : ${_item.category}')
+                ],
               ),
+              pw.SizedBox(height: 4,),
+              pw.Text('(${_item.uid})',style: pw.TextStyle(color: PdfColors.black),),
+              pw.SizedBox(height: 8,),
               pw.Row(
-                  children: [
-                    pw.Text(
-                      'Potongan fee (6%) : ',
-                      style: pw.TextStyle(
-                          color: PdfColors.black,
-                          fontStyle: pw.FontStyle.italic
-                      ),
-                    ),
-                    pw.SizedBox(width: 4),
-                    pw.Text(
-                      'Rp.',
-                      style: pw.TextStyle(
-                        color: PdfColors.black,
-                      ),
-                    ),
-                  ]
-              ),
-              pw.Row(
-                  children: [
-                    pw.Text(
-                      'Potongan lainnya : ',
-                      style: pw.TextStyle(
-                          color: PdfColors.black,
-                          fontStyle: pw.FontStyle.italic
-                      ),
-                    ),
-                    pw.SizedBox(width: 4),
-                    pw.Text(
-                      'Rp.',
-                      style: pw.TextStyle(
-                        color: PdfColors.black,
-                      ),
-                    ),
-                  ]
-              ),
-              pw.Container(
-                width: 250,
-                color: PdfColors.grey,
-                margin: pw.EdgeInsets.symmetric(vertical: 8)
-              ),
-              pw.Row(
-                  children: [
-                    pw.Text(
-                      'Jumlah setoran : ',
-                      style: pw.TextStyle(
-                          color: PdfColors.black,
-                          fontStyle: pw.FontStyle.italic
-                      ),
-                    ),
-                    pw.SizedBox(width: 4),
-                    pw.Text(
-                      'Rp.',
-                      style: pw.TextStyle(
-                        color: PdfColors.black,
-                      ),
-                    ),
-                  ]
-              ),
-            ]
-          ),
-        ),
-        pw.Expanded(
-          flex: 1,
-          child: pw.DefaultTextStyle(
-            style: pw.TextStyle(
-              fontSize: 14,
-              color: PdfColors.black,
-            ),
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text('Sub Total:'),
-                    pw.Text('1000000'),
-                  ],
-                ),
-                pw.SizedBox(height: 5),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text('Dibayar:'),
-                    pw.Text('20000'),
-                  ],
-                ),
-                pw.Divider(color: PdfColors.red),
-                pw.DefaultTextStyle(
-                  style: pw.TextStyle(
-                    color: PdfColors.red,
-                    fontSize: 17,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                  child: pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text('Meteran : '),
+                  pw.Spacer(),
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.Text('Total:'),
-                      pw.Text('90000'),
+                      pw.Text('Lalu'),
+                      pw.Text('${_item.bill!.lastUsage}',style: pw.TextStyle(fontWeight: pw.FontWeight.bold),),
                     ],
                   ),
-                ),
-              ],
-            ),
+                  pw.SizedBox(width: 24,),
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text('Sekarang'),
+                      pw.Text('${_item.bill!.currentUsage}',style: pw.TextStyle(fontWeight: pw.FontWeight.bold),),
+                    ],
+                  ),
+                ],
+              ),
+              pw.Divider(),
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text('Vol(m3) : '),
+                  pw.Spacer(),
+                  pw.Text('${_item.bill!.currentUsage! - _item.bill!.lastUsage!}',style: pw.TextStyle(fontWeight: pw.FontWeight.bold),),
+                ],
+              ),
+              pw.Divider(),
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text('Tagihan : '),
+                  pw.Spacer(),
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text('Lalu'),
+                      pw.Text('${Helper.formatCurrency(_item.bill!.lastBill!)}',style: pw.TextStyle(fontWeight:pw.FontWeight.bold),),
+                    ],
+                  ),
+                  pw.SizedBox(width: 24,),
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text('Sekarang'),
+                      pw.Text('${Helper.formatCurrency(_item.bill!.currentBill!)}',style: pw.TextStyle(fontWeight: pw.FontWeight.bold),),
+                    ],
+                  ),
+                ],
+              ),
+              pw.Divider(),
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text('Total Tagihan : '),
+                  pw.Spacer(),
+                  pw.Text('${Helper.formatCurrency(_item.bill!.lastBill! + _item.bill!.currentBill!)}',style: pw.TextStyle(fontWeight: pw.FontWeight.bold),)
+                ],
+              ),
+              pw.Divider(),
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text('Dibayar : '),
+                  pw.Spacer(),
+                  pw.Text('${Helper.formatCurrency(_item.bill!.totalPaid!)}',style: pw.TextStyle(fontWeight: pw.FontWeight.bold),)
+                ],
+              ),
+              pw.Divider(),
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text('Sisa tagihan : '),
+                  pw.Spacer(),
+                  pw.Text('${Helper.formatCurrency((_item.bill!.lastBill! + _item.bill!.currentBill!) - _item.bill!.totalPaid!)}',style: pw.TextStyle(fontWeight: pw.FontWeight.bold),)
+                ],
+              ),
+            ],
           ),
+        );
+      },
+    );
+  }
+  pw.Widget _contentFooter(pw.Context context) {
+    return pw.Column(
+      children: [
+        pw.Row(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Expanded(
+              flex: 2,
+              child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Row(
+                        children: [
+                          pw.Text(
+                            'Setoran tagihan : ',
+                            style: pw.TextStyle(
+                                color: PdfColors.black,
+                                fontStyle: pw.FontStyle.italic
+                            ),
+                          ),
+                          pw.SizedBox(width: 4),
+                          pw.Text(
+                            'Rp.',
+                            style: pw.TextStyle(
+                              color: PdfColors.black,
+                            ),
+                          ),
+                        ]
+                    ),
+                    pw.Row(
+                        children: [
+                          pw.Text(
+                            'Potongan fee (6%) : ',
+                            style: pw.TextStyle(
+                                color: PdfColors.black,
+                                fontStyle: pw.FontStyle.italic
+                            ),
+                          ),
+                          pw.SizedBox(width: 4),
+                          pw.Text(
+                            'Rp.',
+                            style: pw.TextStyle(
+                              color: PdfColors.black,
+                            ),
+                          ),
+                        ]
+                    ),
+                    pw.Row(
+                        children: [
+                          pw.Text(
+                            'Potongan lainnya : ',
+                            style: pw.TextStyle(
+                                color: PdfColors.black,
+                                fontStyle: pw.FontStyle.italic
+                            ),
+                          ),
+                          pw.SizedBox(width: 4),
+                          pw.Text(
+                            'Rp.',
+                            style: pw.TextStyle(
+                              color: PdfColors.black,
+                            ),
+                          ),
+                        ]
+                    ),
+                    pw.Container(
+                        width: 250,
+                        color: PdfColors.grey,
+                        margin: pw.EdgeInsets.symmetric(vertical: 8)
+                    ),
+                    pw.Row(
+                        children: [
+                          pw.Text(
+                            'Jumlah setoran : ',
+                            style: pw.TextStyle(
+                                color: PdfColors.black,
+                                fontStyle: pw.FontStyle.italic
+                            ),
+                          ),
+                          pw.SizedBox(width: 4),
+                          pw.Text(
+                            'Rp.',
+                            style: pw.TextStyle(
+                              color: PdfColors.black,
+                            ),
+                          ),
+                        ]
+                    ),
+                  ]
+              ),
+            ),
+            pw.Expanded(
+              flex: 2,
+              child: pw.DefaultTextStyle(
+                style: pw.TextStyle(
+                  fontSize: 14,
+                  color: PdfColors.black,
+                ),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text('Meter lalu:'),
+                        pw.Text('$_lastUsage'),
+                      ],
+                    ),
+                    pw.SizedBox(height: 5),
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text('Meter sekarang:'),
+                        pw.Text('$_currentUsage'),
+                      ],
+                    ),
+                    pw.SizedBox(height: 5),
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text('Vol(m3):'),
+                        pw.Text('$_vol'),
+                      ],
+                    ),
+                    pw.SizedBox(height: 5),
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text('Tagihan lalu:'),
+                        pw.Text('${Helper.formatCurrency(_lastBill)}'),
+                      ],
+                    ),
+                    pw.SizedBox(height: 5),
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text('Tagihan sekarang:'),
+                        pw.Text('${Helper.formatCurrency(_currentBill)}'),
+                      ],
+                    ),
+                    pw.SizedBox(height: 5),
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text('Tagihan Total:'),
+                        pw.Text('${Helper.formatCurrency(_totalBill)}'),
+                      ],
+                    ),
+                    pw.SizedBox(height: 5),
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text('Dibayar:'),
+                        pw.Text('${Helper.formatCurrency(_totalPaid)}'),
+                      ],
+                    ),
+                    pw.Divider(color: PdfColors.red),
+                    pw.DefaultTextStyle(
+                      style: pw.TextStyle(
+                        color: PdfColors.red,
+                        fontSize: 17,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                      child: pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Text('Sisa:'),
+                          pw.Text('${Helper.formatCurrency(_remain)}'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+        pw.SizedBox(height: 30),
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+          children: [
+            pw.Text('Kalibagor,'),
+            pw.Text('Yang menerima setoran,'),
+            pw.Text('Yang menyetorkan,'),
+          ]
+        )
+      ]
     );
   }
 }
 
-class _ProductModel {
 
+class DownloadReportParams{
+  final List<UserModel> user;
+  final String date;
+  final String address;
 
-  final int no;
-  final String uid;
-  final String category;
-  final String name;
-  final String lastUsage;
-  final String currentUsage;
-  final int vol;
-  final int lastBill;
-  final int currentBill;
-  final int totalBill;
-  final int totalRemains;
-  final int totalPaid;
+  DownloadReportParams({required this.user,required this.date,required this.address});
 
-  _ProductModel(this.no, this.uid, this.category, this.name, this.lastUsage, this.currentUsage, this.vol, this.lastBill, this.currentBill, this.totalBill, this.totalRemains, this.totalPaid);
-
-  String getIndex(int index) {
-    switch (index) {
-      case 0:
-        return no.toString();
-      case 1:
-        return name;
-      case 2:
-        return category;
-      case 3:
-        return currentUsage.toString();
-      case 4:
-        return Helper.formatCurrency(totalBill);
-    }
-    return '';
-  }
 }

@@ -71,7 +71,7 @@ Route? generateRoute(RouteSettings settings){
       _route = _pageRoute(settings: settings, body: ReportScreen());
       break;
     case rDownloadReport:
-      _route = _pageRoute(settings: settings, body: DownloadReportScreen(data: _args as List<UserModel>,));
+      _route = _pageRoute(settings: settings, body: DownloadReportScreen(data: _args as DownloadReportParams,));
       break;
   }
   return _route;

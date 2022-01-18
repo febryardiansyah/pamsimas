@@ -10,6 +10,8 @@ import 'package:pamsimas/helpers/routes.dart';
 import 'package:pamsimas/repositories/user_repo.dart';
 import 'package:collection/collection.dart';
 
+import 'download_report_screen.dart';
+
 class ReportScreen extends StatefulWidget {
   @override
   _ReportScreenState createState() => _ReportScreenState();
@@ -108,7 +110,10 @@ class _ReportScreenState extends State<ReportScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   GestureDetector(
-                                    onTap: ()=>Navigator.pushNamed(context, rDownloadReport,arguments: _data),
+                                    onTap: ()=>Navigator.pushNamed(context, rDownloadReport,arguments: DownloadReportParams(
+                                      user: _data,date: '$_selectedMonth ${_currentYear.text}',
+                                      address: 'RT.$_selectedRT / RW.$_selectedRW'
+                                    )),
                                     child: Container(
                                       padding: EdgeInsets.all(8),
                                       decoration: BoxDecoration(
@@ -156,7 +161,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                         children: [
                                           Row(
                                             children: [
-                                              Text(_item.name!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                                              Text('${i+1}. ${_item.name!}',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
                                               Spacer(),
                                               BuildCategory(category: _item.category,)
                                             ],

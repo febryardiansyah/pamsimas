@@ -54,6 +54,7 @@ class _DownloadReportScreenState extends State<DownloadReportScreen> {
         build: (format)async=>_generatePdf(format),
         pdfFileName: 'Laporan tagihan ${data.date}',
         previewPageMargin: EdgeInsets.all(4),
+        canDebug: false,
       ),
     );
   }
@@ -208,6 +209,7 @@ class _DownloadReportScreenState extends State<DownloadReportScreen> {
   }
   pw.Widget _contentFooter(pw.Context context) {
     return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Row(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -384,10 +386,11 @@ class _DownloadReportScreenState extends State<DownloadReportScreen> {
           ],
         ),
         pw.SizedBox(height: 30),
+        pw.Text('Kalibagor,'),
+        pw.SizedBox(height: 30),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
           children: [
-            pw.Text('Kalibagor,'),
             pw.Text('Yang menerima setoran,'),
             pw.Text('Yang menyetorkan,'),
           ]

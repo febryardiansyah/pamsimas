@@ -53,7 +53,15 @@ class StatusCard extends StatelessWidget {
                     ],
                   ),
                   Spacer(),
-                  BuildPayedStatus(isPayed: _isPayed)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BuildPayedStatus(isPayed: _isPayed),
+                      SizedBox(height: 4,),
+                      data!.currentBill! - data!.totalPaid! == 0?Center():
+                      Text('- ${Helper.formatCurrency(data!.currentBill! - data!.totalPaid!)}',)
+                    ],
+                  ),
                 ],
               ),
             ),

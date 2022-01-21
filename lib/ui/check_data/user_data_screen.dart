@@ -10,6 +10,7 @@ import 'package:pamsimas/components/build_category.dart';
 import 'package:pamsimas/components/status_card.dart';
 import 'package:pamsimas/helpers/base_color.dart';
 import 'package:pamsimas/helpers/helper.dart';
+import 'package:pamsimas/model/user_model.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UserDataScreen extends StatefulWidget {
@@ -26,10 +27,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
   final _refreshController = RefreshController(initialRefresh: false);
   bool _hasReachedMax = false;
   String? _lastBillId;
-  List<_StatusModel> _statusList = [
-    _StatusModel('Sudah Bayar', true),
-    _StatusModel('Belum Bayar', false),
-  ];
+  UserModel? _userData;
 
   @override
   void initState() {
@@ -59,6 +57,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
               EasyLoading.showError(state.msg!);
             }
             if (state is UpdatePaymentStatusSuccess) {
+              _totalPaidCtrl.clear();
               context.read<GetUserByUidCubit>().fetchUserByUid(widget.uid);
               context.read<GetHistoryBillCubit>().fetchHistory(uid: widget.uid);
               EasyLoading.showSuccess(state.msg!);
@@ -142,7 +141,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                           children: [
                                             Text('Pemakaian bulan ini',style: TextStyle(color: BaseColor.grey),),
                                             Spacer(),
-                                            Text('${_data.bill!.usage} m3')
+                                            Text('${_data.bill!.currentUsage} m3')
                                           ],
                                         ),
                                         SizedBox(height: 8,),
@@ -181,7 +180,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                         Center(
                                           child: FlatButton(
                                             onPressed: (){
-                                              _showChangeStatus(true,null,_data.bill!.currentBill!,_data.bill!.totalPaid!);
+                                              _showChangeStatus(true,null,_data.bill!.currentBill!,_data.bill!.totalPaid!,0);
                                             },
                                             child: Text('Ubah Status',style: TextStyle(color: BaseColor.red),),
                                           ),
@@ -205,7 +204,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                             }
                             if (state is GetHistoryBillSuccess) {
                               final _data = state.data!;
-                              _lastBillId = _data.isEmpty?null:_data[0].id;
+                              _lastBillId = _data.isEmpty?null:_data[0].bill!.id;
                               return _data.isEmpty?Center(
                                 child: Text('Masih Kosong'),
                               ): ListView.builder(
@@ -213,15 +212,16 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                 physics: ClampingScrollPhysics(),
                                 itemCount: _data.length,
                                 itemBuilder: (context,i){
-                                  final _item = _data[i];
+                                  final _item = _data[i].bill!;
                                   return Padding(
                                     padding: EdgeInsets.only(bottom: 10),
                                     child: StatusCard(
                                       onTap: (){
+                                        print(i);
                                         if (i == 0) {
-                                          _showChangeStatus(true,_lastBillId,_item.currentBill!,_item.totalPaid!);
+                                          _showChangeStatus(true,_lastBillId,_item.currentBill!,_item.totalPaid!,i);
                                         } else {
-                                          _showChangeStatus(false,_item.id!,_item.currentBill!,_item.totalPaid!);
+                                          _showChangeStatus(false,_item.id!,_item.currentBill!,_item.totalPaid!,i);
                                         }
                                       },
                                       data: _item,
@@ -246,7 +246,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
     );
   }
 
-  void _showChangeStatus(bool userCollection,String? id,int currentBill,int totalPaid){
+  void _showChangeStatus(bool userCollection,String? id,int currentBill,int totalPaid,int? index){
     showModalBottomSheet(context: context,isScrollControlled: true,shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(10))
     ), builder: (context)=>Padding(
@@ -271,7 +271,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                 onTap:_totalPaidCtrl.text.isEmpty?null: (){
                   _showDialogConfirmation(
                     totalPaid: totalPaid,currentBill: currentBill,
-                    userCollection: userCollection
+                    userCollection: userCollection,index: index,id: id
                   );
                 },
                 child: Container(
@@ -291,7 +291,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
     ));
   }
 
-  void _showDialogConfirmation({int? currentBill,int? totalPaid,bool? userCollection,String? id}){
+  void _showDialogConfirmation({int? currentBill,int? totalPaid,bool? userCollection,String? id,int? index}){
     showDialog(context: context, builder: (context)=>AlertDialog(
       title: Text('Konfirmasi pembayaran'),
       content: Text('${Helper.formatCurrency(int.parse(_totalPaidCtrl.text))}',style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
@@ -307,12 +307,12 @@ class _UserDataScreenState extends State<UserDataScreen> {
             } else if (currentBill == _res) {
               context.read<UpdatePaymentStatusCubit>().updateStatus(
                 uid: widget.uid, status: true,userCollection: userCollection!,id: id == null?_lastBillId:id,
-                totalPaid:int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,
+                totalPaid:int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,index: index
               );
             } else {
               context.read<UpdatePaymentStatusCubit>().updateStatus(
                 uid: widget.uid, status: false,userCollection: userCollection!,id: id == null?_lastBillId:id,
-                totalPaid: int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,
+                totalPaid: int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,index: index
               );
             }
           },

@@ -13,6 +13,8 @@ import 'package:pamsimas/ui/index.dart';
 import 'package:pamsimas/ui/login_register/login_screen.dart';
 import 'package:pamsimas/ui/qr_code/qr_code_screen.dart';
 import 'package:pamsimas/ui/qr_code/scan_result_screen.dart';
+import 'package:pamsimas/ui/report/download_report_screen.dart';
+import 'package:pamsimas/ui/report/report_screen.dart';
 
 MaterialPageRoute _pageRoute({required RouteSettings settings,required Widget body})=>MaterialPageRoute(
   builder: (_) => body,
@@ -65,6 +67,12 @@ Route? generateRoute(RouteSettings settings){
     case rInvoice:
       _route = _pageRoute(settings: settings, body: InvoiceScreen(data: _args as UserModel,));
       break;
+    case rReport:
+      _route = _pageRoute(settings: settings, body: ReportScreen());
+      break;
+    case rDownloadReport:
+      _route = _pageRoute(settings: settings, body: DownloadReportScreen(data: _args as DownloadReportParams,));
+      break;
   }
   return _route;
 }
@@ -83,3 +91,5 @@ const String rHistoryBill = '/historyBill';
 const String rSettings = '/settings';
 const String rChangePassword = '/changePassword';
 const String rInvoice = '/invoice';
+const String rReport = '/report';
+const String rDownloadReport = '/downloadReport';

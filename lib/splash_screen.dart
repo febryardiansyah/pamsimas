@@ -29,14 +29,8 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Image.asset(BaseString.iMainLogo,width: _size.width * 0.2,height: _size.height * 0.2,fit: BoxFit.contain,),
             ),
             Positioned(
-              left: -40,
               bottom: -100,
-              child: Image.asset(BaseString.vBlueVector,height: _size.height * 0.5,width: _size.height * 0.5,),),
-            Positioned(
-              child: Image.asset(BaseString.vLightBlueVector,height: _size.height * 0.4,width: _size.height * 0.4,),
-              right: -40,
-              bottom: -100,
-            ),
+              child: Image.asset(BaseString.vSplashVector,height: _size.height * 0.5,width: _size.width),),
           ],
         ),
       ),

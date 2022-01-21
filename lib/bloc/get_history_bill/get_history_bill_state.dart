@@ -9,13 +9,13 @@ abstract class GetHistoryBillState extends Equatable {
 class GetHistoryBillInitial extends GetHistoryBillState {}
 class GetHistoryBillLoading extends GetHistoryBillState {}
 class GetHistoryBillSuccess extends GetHistoryBillState {
-  final List<BillModel>? data;
+  final List<UserModel>? data;
   final bool? hasReachedMax;
   final int? limit;
 
   GetHistoryBillSuccess({this.data, this.hasReachedMax, this.limit});
 
-  GetHistoryBillSuccess copyWith({List<BillModel>? data,bool? hasReachedMax,int? limit,}){
+  GetHistoryBillSuccess copyWith({List<UserModel>? data,bool? hasReachedMax,int? limit,}){
     return GetHistoryBillSuccess(
       data: data ?? this.data,
       limit: limit ?? this.limit,

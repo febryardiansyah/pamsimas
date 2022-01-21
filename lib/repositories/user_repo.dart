@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pamsimas/helpers/helper.dart';
 import 'package:pamsimas/model/ResponseModel.dart';
 import 'package:pamsimas/model/history_model.dart';
+import 'package:pamsimas/model/user_model.dart';
 import 'package:uuid/uuid.dart';
 
 class UserRepo{
@@ -48,21 +49,30 @@ class UserRepo{
     }
   }
 
-  Future<ResponseModel> inputUserBill({required String uid,required int currentBill,required String month,required String year,required String usage})async{
+  Future<ResponseModel> inputUserBill({
+    required String uid,required int currentBill,required String month,required String year,required int currentUsage,
+    int? lastBill,int? lastUsage,required UserModel userData,
+  })async{
     try{
       String _id = '${_uuid.v1()}$uid${DateTime.now().millisecondsSinceEpoch}';
       await _fireStore.collection('users').doc(uid).update({
         'bill':{
-          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,'usage':usage,'createdAt':DateTime.now(),'id':_id,
-          'totalPaid':0,
+          'currentBill':currentBill,'month':month,'isPayed':false,'year':year,'currentUsage':currentUsage,'createdAt':DateTime.now(),'id':_id,
+          'totalPaid':0,'lastBill':lastBill ?? 0,'lastUsage':lastUsage??0
         }
       });
       print('BILL DOC ID ==> $_id');
       final _billData = BillModel(
-        currentBill: currentBill,month: month,isPayed: false,year: year,usage: usage,createdAt: DateTime.now(),id:_id,
-        totalPaid: 0,
+        currentBill: currentBill,month: month,isPayed: false,year: year,currentUsage: currentUsage,createdAt: DateTime.now(),id:_id,
+        totalPaid: 0,lastBill: lastBill ?? 0,lastUsage: lastUsage ?? 0,
       );
-      await _fireStore.collection('history').doc(uid).collection('bills').doc(_id).set(_billData.toMap());
+
+      final _userData = UserModel(
+        name: userData.name,address: userData.address,bill: _billData,
+        category: userData.category,uid: userData.uid,role: userData.role
+      );
+
+      await _fireStore.collection('reports').doc(_id).set(_userData.toMap());
 
       return ResponseModel(
         status: true,msg: 'Berhasil',data: null,
@@ -101,6 +111,25 @@ class UserRepo{
     final _res = await FirebaseFirestore.instance.collection('address').doc(address).get();
     List<String>_data = List<String>.from(_res.data()!['value'].map((x)=>x));
     return _data;
+  }
+
+  Future<ResponseModel> getReport({required String month,required String year,required String rt,required String rw,required int limit})async{
+    try{
+      final _res = await _fireStore.collection('reports')
+          .where('bill.month',isEqualTo: month)
+          .where('bill.year',isEqualTo: year)
+          .where('address',isEqualTo: 'RT.$rt / RW.$rw')
+          .get();
+      print(_res.docs);
+      return ResponseModel(
+          msg: 'Data ditemukan',data: _res.docs,status: true
+      );
+    }on FirebaseException catch(e){
+      print(e);
+      return ResponseModel(
+          status: false,data: null,msg: Helper.getAuthErr(e.code)
+      );
+    }
   }
 
   Future<bool> _checkName(String name)async{

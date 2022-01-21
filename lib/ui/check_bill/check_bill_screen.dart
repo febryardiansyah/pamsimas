@@ -147,7 +147,7 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                                     children: [
                                       Text('Pemakaian',style: TextStyle(color: BaseColor.grey),),
                                       Spacer(),
-                                      Text('${_data.bill!.usage} m3')
+                                      Text('${_data.bill!.currentUsage} m3')
                                     ],
                                   ),
                                   SizedBox(height: 10,),

@@ -20,14 +20,19 @@ class HistoryModel{
 class BillModel {
   String? id;
   int? currentBill;
+  int? lastBill;
+  int? currentUsage;
+  int? lastUsage;
   int? totalPaid;
   String? month;
   bool? isPayed;
   String? year;
-  String? usage;
   DateTime? createdAt;
 
-  BillModel({this.currentBill, this.month, this.isPayed,this.year,this.usage,this.createdAt,this.id,this.totalPaid});
+  BillModel({
+    this.currentBill, this.month, this.isPayed,this.year,this.currentUsage,this.createdAt,this.id,this.totalPaid,
+    this.lastBill,this.lastUsage,
+});
 
   factory BillModel.fromMap(Map<String,dynamic>json){
     return BillModel(
@@ -37,7 +42,9 @@ class BillModel {
       month: json['month'] == null?null:json['month'],
       isPayed: json['isPayed'] == null?null:json['isPayed'],
       year: json['year'] == null?null:json['year'],
-      usage: json['usage'] == null?null:json['usage'],
+      currentUsage: json['currentUsage'] == null?null:json['currentUsage'],
+      lastBill: json['lastBill'] == null?null:json['lastBill'],
+      lastUsage: json['lastUsage'] == null?null:json['lastUsage']
       // createdAt: json['createdAt'] == null?null:DateTime.parse(json['createdAt'])
     );
   }
@@ -48,8 +55,10 @@ class BillModel {
     'month':month,
     'isPayed':isPayed,
     'year':year,
-    'usage':usage,
+    'currentUsage':currentUsage,
     'createdAt':createdAt,
-    'totalPaid':totalPaid
+    'totalPaid':totalPaid,
+    'lastBill':lastBill,
+    'lastUsage':lastUsage,
   };
 }

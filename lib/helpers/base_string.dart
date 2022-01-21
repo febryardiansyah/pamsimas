@@ -6,6 +6,7 @@ class BaseString {
   static String vBlueVector = "assets/vector/blue-vector.png";
   static String vWaterDrop = "assets/vector/water-drop.png";
   static String vLightBlueVector = "assets/vector/light-blue-vector.png";
+  static String vSplashVector = "assets/vector/splash-vector.png";
   static String iMainLogo = "assets/images/MainLogo.png";
   static String iBarcode = "assets/icons/barcode.svg";
   static String iData = "assets/icons/data.svg";
@@ -14,6 +15,7 @@ class BaseString {
   static String iAddUser = "assets/icons/addUser.svg";
   static String iMeter = "assets/icons/meter.svg";
   static String iWaterTap = "assets/icons/water-tap.svg";
+  static String iReport = "assets/icons/report.svg";
 
   static String token = "token";
 }

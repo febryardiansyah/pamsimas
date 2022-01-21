@@ -28,6 +28,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
   bool _isLastBillManual = false;
   UserModel? _userData;
   final _lastBillManualCtrl = TextEditingController();
+  final _additionalPrice = TextEditingController();
   DateTime _currentDate = DateTime.now();
   TextEditingController _currentYear = TextEditingController();
   List<String> _monthList = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -149,7 +150,6 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                 ),
                               ),
                               SizedBox(height: 10,),
-                              SizedBox(height: 8,),
                               TextFormField(
                                 controller: _inputCtrl,
                                 keyboardType: TextInputType.number,
@@ -158,7 +158,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                     label: Text('Meter Sekarang')
                                 ),
                               ),
-                              SizedBox(height: 20,),
+                              SizedBox(height: 10,),
                               DropdownButton<String>(
                                 isExpanded: true,
                                 hint: Text('Bulan'),
@@ -178,7 +178,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                   value: e,
                                 )).toList(),
                               ),
-                              SizedBox(height: 20,),
+                              SizedBox(height: 10,),
                               TextFormField(
                                 controller: _currentYear,
                                 decoration: InputDecoration(
@@ -189,6 +189,15 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                   Helper.requestFocusNode(context);
                                   _showYearPicker();
                                 },
+                              ),
+                              SizedBox(height: 10,),
+                              Text('Biaya tambahan (Opsional)'),
+                              TextFormField(
+                                controller: _additionalPrice,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  hintText: 'Masukan biaya tambahan jika perlu',
+                                ),
                               ),
                               SizedBox(height: 30,),
                               GestureDetector(
@@ -206,7 +215,6 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 20,),
                             ],
                           ),
                         ),
@@ -259,6 +267,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
     }
     int _res = (_mt ~/ 20).toInt();
     int _bill = _priceByCategory * _res;
+    _bill += _additionalPrice.text.isEmpty?0:int.parse(_additionalPrice.text);
     setState(() {
       _totalBill = _bill;
     });

@@ -40,6 +40,13 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   }
 
   late var _image;
+  List<String> _rules = [
+    'Pembayaran terakhir setiap tanggal 25 setiap bulan',
+    'Loket pembayaran buka jam 08.00 s/d 20.00 WIB',
+    'Keterlambatan pembayaran dikenakan denda Rp.0',
+    'Keterlambatan 3 bulan akan dikenakan pemutusan',
+    'Tunjukan invoice ini ketika membayar',
+  ];
 
   Future<Uint8List> _generatePdf(PdfPageFormat format, UserModel user) async {
     final _doc = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
@@ -196,15 +203,31 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   pw.Widget _contentFooter(pw.Context context) {
     return pw.Row(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
+      mainAxisAlignment: pw.MainAxisAlignment.start,
       children: [
         pw.Expanded(
           flex: 2,
-          child: pw.Text(
-            'Terimakasih telah berlangganan',
-            style: pw.TextStyle(
-              color: PdfColors.black,
-              fontWeight: pw.FontWeight.bold,
-            ),
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            children: [
+              pw.Text(
+                'PERHATIAN : ',
+                style: pw.TextStyle(
+                  color: PdfColors.black,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 8),
+              pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                children: _rules.map((e){
+                  int i = _rules.indexOf(e);
+                  return pw.Text('${i+1}. ${_rules[i]}',textAlign: pw.TextAlign.left);
+                }).toList()
+              )
+            ]
           ),
         ),
         pw.Expanded(

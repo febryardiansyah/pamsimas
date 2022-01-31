@@ -10,8 +10,11 @@ class AuthRepo {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<ResponseModel> signIn({String? email,String? password})async{
-    if (email!.isEmpty) {
-      return ResponseModel(status: false,msg: 'Email tidak boleh kosong',data: null);
+    if (email!.isEmpty && password!.isEmpty) {
+      return ResponseModel(status: false,msg: 'Username dan Password tidak boleh kosong',data: null);
+    }
+    if (email.isEmpty) {
+      return ResponseModel(status: false,msg: 'Username tidak boleh kosong',data: null);
     }
     if (password!.isEmpty) {
       return ResponseModel(status: false,msg: 'Password tidak boleh kosong',data: null);

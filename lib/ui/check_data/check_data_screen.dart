@@ -164,23 +164,57 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                         ],
                       ),
                       SizedBox(height: 20,),
-                      GestureDetector(
-                        onTap: _showFilter,
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          width: 100,
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 1),
-                              borderRadius: BorderRadius.circular(8)
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: _showFilter,
+                            child: Container(
+                              padding: EdgeInsets.all(8),
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  border: Border.all(width: 1),
+                                  borderRadius: BorderRadius.circular(8)
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.filter_list),
+                                  SizedBox(width: 5,),
+                                  Text('Filter')
+                                ],
+                              ),
+                            ),
                           ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.filter_list),
-                              SizedBox(width: 5,),
-                              Text('Filter')
-                            ],
+                          Spacer(),
+                          IconButton(
+                            icon: Icon(Icons.more_vert),
+                            onPressed: (){
+                              showModalBottomSheet(context: context,shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)
+                              ), builder: (context)=>Container(
+                                height: 200,
+                                padding: EdgeInsets.all(8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Opsi',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                                    Divider(),
+                                    ListTile(
+                                      leading: Icon(Icons.qr_code),
+                                      title: Text('Download semua QR Code'),
+                                      trailing: Icon(Icons.arrow_forward_ios),
+                                      onTap: ()=>Navigator.pushNamed(context, rDownloadAllQrCode),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.people),
+                                      title: Text('Download semua akun pengguna'),
+                                      trailing: Icon(Icons.arrow_forward_ios),
+                                    ),
+                                  ],
+                                ),
+                              ));
+                            },
                           ),
-                        ),
+                        ],
                       ),
                       SizedBox(height: 20,),
                       _data.length == 0?

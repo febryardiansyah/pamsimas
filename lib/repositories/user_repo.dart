@@ -123,6 +123,23 @@ class UserRepo{
     }
   }
 
+  Future<ResponseModel> getAllUser()async{
+    try{
+      final _res = await _fireStore.collection('users').
+          where('role',isEqualTo: 'Pelanggan')
+          .get();
+      return ResponseModel(
+          msg: 'Pencarian berhasil',data: _res.docs,status: true
+      );
+    }on FirebaseException catch(e){
+      print(e);
+      return ResponseModel(
+          status: false,data: null,msg: Helper.getAuthErr(e.code)
+      );
+    }
+  }
+
+
   static Future<List<String>> getAddress({required String address})async{
     final _res = await FirebaseFirestore.instance.collection('address').doc(address).get();
     List<String>_data = List<String>.from(_res.data()!['value'].map((x)=>x));

@@ -53,8 +53,7 @@ class _DownloadAllQrCodeState extends State<DownloadAllQrCode> {
     );
   }
 
-  Future<Uint8List> _generatePdf(
-      PdfPageFormat format, List<UserModel> users) async {
+  Future<Uint8List> _generatePdf(PdfPageFormat format, List<UserModel> users) async {
     final _doc = pw.Document(
       version: PdfVersion.pdf_1_5,
       compress: true,

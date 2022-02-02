@@ -208,6 +208,7 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                                       leading: Icon(Icons.people),
                                       title: Text('Download semua akun pengguna'),
                                       trailing: Icon(Icons.arrow_forward_ios),
+                                      onTap: ()=>Navigator.pushNamed(context, rDownloadAllUserAccount),
                                     ),
                                   ],
                                 ),

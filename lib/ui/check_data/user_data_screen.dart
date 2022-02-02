@@ -10,6 +10,7 @@ import 'package:pamsimas/components/build_category.dart';
 import 'package:pamsimas/components/status_card.dart';
 import 'package:pamsimas/helpers/base_color.dart';
 import 'package:pamsimas/helpers/helper.dart';
+import 'package:pamsimas/helpers/routes.dart';
 import 'package:pamsimas/model/user_model.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -119,7 +120,11 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                           ],
                                         )
                                       ],
-                                    )
+                                    ),
+                                    Spacer(),
+                                    IconButton(onPressed: (){
+                                      Navigator.pushNamed(context, rUserAccount,arguments: _data);
+                                    }, icon: Icon(Icons.settings)),
                                   ],
                                 ),
                                 SizedBox(height: 8,),

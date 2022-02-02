@@ -35,7 +35,7 @@ class UserRepo{
       String _uid = _user.user!.uid.substring(0,7);
       await _fireStore.collection('users').doc(_uid).set({
         'name':name,'address':address,'password':'123456','role':role,'category':category,
-        'uid':_uid
+        'uid':_uid,'username':_email
       });
       return ResponseModel(
         status: true,msg: 'Berhasil ditambahkan',

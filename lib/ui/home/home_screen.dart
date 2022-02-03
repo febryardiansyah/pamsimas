@@ -31,11 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _scanQr(BuildContext context)async{
     try{
       final _res = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.QR);
-      print(_res);
-      if (_res.isEmpty) {
-        Navigator.pop(context);
-      }
+          '#ff6666', 'Cancel', true, ScanMode.QR,);
+      print('Scan Result ==> $_res');
       Navigator.pushNamed(context, rScanResult,arguments: _res);
     }catch(e){
       print('SCAN ERROR ==> $e');
@@ -127,12 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Image.asset(BaseString.iMainLogo,height: 40,width: 100,fit: BoxFit.contain,),
                       Spacer(),
-                      IconButton(
-                        onPressed: (){
-
-                        },
-                        icon: Icon(Icons.notifications,color: BaseColor.orange,),
-                      ),
                       IconButton(
                         onPressed: ()=>Navigator.pushNamed(context, rSettings),
                         icon: Icon(Icons.settings,color: BaseColor.grey,),

@@ -35,7 +35,7 @@ class UserRepo{
       String _uid = _user.user!.uid.substring(0,7);
       await _fireStore.collection('users').doc(_uid).set({
         'name':name,'address':address,'password':'123456','role':role,'category':category,
-        'uid':_uid
+        'uid':_uid,'username':_email
       });
       return ResponseModel(
         status: true,msg: 'Berhasil ditambahkan',
@@ -54,6 +54,13 @@ class UserRepo{
     int? lastBill,int? lastUsage,required UserModel userData,
   })async{
     try{
+      bool _isExist = await _checkDateExist(uid, month, year);
+      print('IS Exist ==> $_isExist');
+      if (_isExist) {
+        return ResponseModel(
+          status: false,msg: 'Data tanggal ini sudah ada',data: null,
+        );
+      }
       String _id = '${_uuid.v1()}$uid${DateTime.now().millisecondsSinceEpoch}';
       await _fireStore.collection('users').doc(uid).update({
         'bill':{
@@ -85,6 +92,15 @@ class UserRepo{
     }
   }
 
+  Future<bool> _checkDateExist(String uid,String month,String year)async{
+    final _res = await _fireStore.collection('reports')
+        .where('uid',isEqualTo: uid)
+        .where('bill.month',isEqualTo: month)
+        .where('bill.year',isEqualTo: year)
+        .get();
+    return _res.docs.isNotEmpty;
+  }
+
   Future<ResponseModel> searchUser({required int limit,String? query,bool? status,String? category})async{
     try{
       String _query = query == null?'':query.length == 0?'':query[0].toUpperCase()+query.substring(1).toLowerCase();
@@ -106,6 +122,23 @@ class UserRepo{
       );
     }
   }
+
+  Future<ResponseModel> getAllUser()async{
+    try{
+      final _res = await _fireStore.collection('users').
+          where('role',isEqualTo: 'Pelanggan')
+          .get();
+      return ResponseModel(
+          msg: 'Pencarian berhasil',data: _res.docs,status: true
+      );
+    }on FirebaseException catch(e){
+      print(e);
+      return ResponseModel(
+          status: false,data: null,msg: Helper.getAuthErr(e.code)
+      );
+    }
+  }
+
 
   static Future<List<String>> getAddress({required String address})async{
     final _res = await FirebaseFirestore.instance.collection('address').doc(address).get();
@@ -130,10 +163,5 @@ class UserRepo{
           status: false,data: null,msg: Helper.getAuthErr(e.code)
       );
     }
-  }
-
-  Future<bool> _checkName(String name)async{
-    final _res = await _fireStore.collection('users').where('name',isEqualTo: name).get();
-    return _res.docs.isNotEmpty;
   }
 }

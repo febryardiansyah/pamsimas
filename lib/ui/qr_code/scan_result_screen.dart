@@ -32,7 +32,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
   DateTime _currentDate = DateTime.now();
   TextEditingController _currentYear = TextEditingController();
   List<String> _monthList = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-  TextEditingController _inputCtrl = TextEditingController();
+  TextEditingController _inputMeterCtrl = TextEditingController();
   int? _lastUsage;
   int? _lastBill;
   int _totalBill = 0;
@@ -60,6 +60,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
           if (state is InputUserBillSuccess) {
             context.read<GetUserByUidCubit>().fetchUserByUid(widget.uid!);
             EasyLoading.showSuccess(state.msg!);
+            Navigator.pop(context);
           }
         },
         child: BlocConsumer<GetUserByUidCubit, GetUserByUidState>(
@@ -151,7 +152,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                               ),
                               SizedBox(height: 10,),
                               TextFormField(
-                                controller: _inputCtrl,
+                                controller: _inputMeterCtrl,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                     hintText: 'Input Meteran',
@@ -201,7 +202,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                               ),
                               SizedBox(height: 30,),
                               GestureDetector(
-                                onTap:_inputCtrl.text.isEmpty || _selectedMonth == null || _currentYear.text.isEmpty?null: (){
+                                onTap:_inputMeterCtrl.text.isEmpty || _selectedMonth == null || _currentYear.text.isEmpty?null: (){
                                   int _currentBill = _calculateBill();
                                   _showCalculationResult(_currentBill);
                                 },
@@ -250,7 +251,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
         _priceByCategory = 5000;
         break;
     }
-    int _input = int.parse(_inputCtrl.text);
+    int _input = int.parse(_inputMeterCtrl.text);
     late int _mt;
     if (_lastUsage == null) {
       print('LAST BILL == NULL');
@@ -265,8 +266,8 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
       print('LAST BILL NOT NUlLL');
       _mt = _input - _lastUsage!;
     }
-    int _res = (_mt ~/ 20).toInt();
-    int _bill = _priceByCategory * _res;
+    // int _res = (_mt ~/ 20).toInt();
+    int _bill = _priceByCategory * _mt;
     _bill += _additionalPrice.text.isEmpty?0:int.parse(_additionalPrice.text);
     setState(() {
       _totalBill = _bill;
@@ -285,7 +286,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
             Navigator.pop(context);
             context.read<InputUserBillCubit>().inputBill(
               uid: widget.uid!, currentBill: currentBill, month: _selectedMonth!,year: _currentYear.text,
-              currentUsage: int.parse(_inputCtrl.text),lastUsage: _lastUsage,lastBill: _lastBill,
+              currentUsage: int.parse(_inputMeterCtrl.text),lastUsage: _lastUsage,lastBill: _lastBill,
               userData: _userData!
             );
           },

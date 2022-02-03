@@ -23,10 +23,15 @@ class _SplashScreenState extends State<SplashScreen> {
     _size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
+        height: _size.height,
+        width: _size.width,
         child: Stack(
           children: [
-            Positioned.fill(
-              child: Image.asset(BaseString.iMainLogo,width: _size.width * 0.2,height: _size.height * 0.2,fit: BoxFit.contain,),
+            Center(
+              child: Image.asset(
+                BaseString.iMainLogo,
+                fit: BoxFit.contain,
+              ),
             ),
             Positioned(
               bottom: -100,

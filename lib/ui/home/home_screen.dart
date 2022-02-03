@@ -125,12 +125,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       Image.asset(BaseString.iMainLogo,height: 40,width: 100,fit: BoxFit.contain,),
                       Spacer(),
                       IconButton(
-                        onPressed: (){
-
-                        },
-                        icon: Icon(Icons.notifications,color: BaseColor.orange,),
-                      ),
-                      IconButton(
                         onPressed: ()=>Navigator.pushNamed(context, rSettings),
                         icon: Icon(Icons.settings,color: BaseColor.grey,),
                       ),

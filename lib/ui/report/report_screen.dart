@@ -57,13 +57,13 @@ class _ReportScreenState extends State<ReportScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Card(
-                      child: ListTile(
-                        leading: Icon(Icons.assignment),
-                        title: Text('Rekap'),
-                      ),
-                    ),
-                    SizedBox(height: 8,),
+                    // Card(
+                    //   child: ListTile(
+                    //     leading: Icon(Icons.assignment),
+                    //     title: Text('Rekap'),
+                    //   ),
+                    // ),
+                    // SizedBox(height: 8,),
                     Row(
                       children: [
                         Text('Laporan Bulanan',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),

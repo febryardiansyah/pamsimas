@@ -86,7 +86,7 @@ class _DownloadUserAccountState extends State<DownloadUserAccount> {
               children: [
                 pw.Text('Username',style: pw.TextStyle(),),
                 pw.Spacer(),
-                pw.Text(user.name!),
+                pw.Text(user.username ?? user.uid!),
               ],
             ),
             pw.SizedBox(height: 8,),

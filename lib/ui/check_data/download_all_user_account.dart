@@ -24,7 +24,7 @@ class _DownloadAllUserAccountState extends State<DownloadAllUserAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Qr Code pengguna'),
+        title: Text('Akun pengguna'),
       ),
       body: BlocBuilder<GetAllUserCubit, GetAllUserState>(
         builder: (context, state) {

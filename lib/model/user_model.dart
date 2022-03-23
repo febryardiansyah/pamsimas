@@ -6,10 +6,11 @@ class UserModel{
   String? category;
   String? name;
   String? role;
+  String? username;
   String? password;
   BillModel? bill;
 
-  UserModel({this.uid, this.address, this.category, this.name, this.role,this.bill,this.password});
+  UserModel({this.uid, this.address, this.category, this.name, this.role,this.bill,this.password,this.username});
 
   factory UserModel.fromMap(Map<String,dynamic>json){
     return UserModel(
@@ -18,6 +19,7 @@ class UserModel{
       category: json['category'],
       role: json['role'],
       uid: json['uid'],
+      username: json['username'] == null?null:json['username'],
       password: json['password'],
       bill: json['bill'] == null?null:BillModel.fromMap(json['bill']),
     );

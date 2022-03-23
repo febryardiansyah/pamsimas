@@ -57,7 +57,7 @@ class _UserAccountScreenState extends State<UserAccountScreen> {
                 children: [
                   Text('Username',style: TextStyle(color: BaseColor.grey),),
                   Spacer(),
-                  Text(user.name!),
+                  Text(user.username ?? user.uid!),
                 ],
               ),
               SizedBox(height: 8,),

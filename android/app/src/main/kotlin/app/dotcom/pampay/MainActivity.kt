@@ -1,4 +1,4 @@
-package com.febryardiansyah.pamsimas
+package app.dotcom.pampay
 
 import io.flutter.embedding.android.FlutterActivity
 

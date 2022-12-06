@@ -7,6 +7,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:852143425890:android:6c8b22381bc57053cb843b",
+        "android_client_info": {
+          "package_name": "app.dotcom.pampay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852143425890-mb6h5ns6ubloo2ntpuaaud7q6qsu9pk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLniUoFJ8DVo379tiN5XFf619XwV3ErZ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852143425890-mb6h5ns6ubloo2ntpuaaud7q6qsu9pk6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:852143425890:android:f2f00e519da0df54cb843b",
         "android_client_info": {
           "package_name": "com.febryardiansyah.pamsimas"

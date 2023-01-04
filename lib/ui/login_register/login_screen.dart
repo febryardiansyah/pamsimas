@@ -27,8 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
     return Scaffold(
-      body: BlocListener<SignInCubit,SignInState>(
-        listener: (context,state){
+      body: BlocListener<SignInCubit, SignInState>(
+        listener: (context, state) {
           if (state is SignInLoading) {
             EasyLoading.show(status: 'Tunggu sebentar');
           }
@@ -72,69 +72,49 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
+
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 20,horizontal: 40),
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                 child: Column(
                   children: [
                     TextFormField(
                       controller: _email,
-                      decoration: InputDecoration(
-                        hintText: 'Username'
-                      ),
+                      decoration: InputDecoration(hintText: 'Username'),
                     ),
                     TextFormField(
                       controller: _password,
                       obscureText: _isPasswordInvisible,
                       decoration: InputDecoration(
-                        hintText: 'Password',
-                        suffixIcon: IconButton(
-                          icon: Icon(_isPasswordInvisible?Icons.lock_outline:Icons.lock_open_outlined),
-                          onPressed: (){
-                            setState(() {
-                              _isPasswordInvisible = !_isPasswordInvisible;
-                            });
-                          },
-                        )
-                      ),
+                          hintText: 'Password',
+                          suffixIcon: IconButton(
+                            icon: Icon(_isPasswordInvisible
+                                ? Icons.lock_outline
+                                : Icons.lock_open_outlined),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordInvisible = !_isPasswordInvisible;
+                              });
+                            },
+                          )),
                     ),
                   ],
                 ),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: BaseColor.lightBlue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)
-                  )
-                ),
-                onPressed: (){
+                    primary: BaseColor.primary,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8))),
+                onPressed: () {
                   Helper.requestFocusNode(context);
                   context.read<SignInCubit>().signButtonPressed(
-                    email: _email.text,password: _password.text
-                  );
+                      email: _email.text, password: _password.text);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Text('LOGIN'),
+                  child: Text('Masuk'),
                 ),
               ),
-              // Padding(
-              //   padding: EdgeInsets.symmetric(vertical: 20),
-              //   child: Text('atau'),
-              // ),
-              // ElevatedButton(
-              //   style: ElevatedButton.styleFrom(
-              //       primary: Colors.white,
-              //       shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(8)
-              //       )
-              //   ),
-              //   onPressed: (){},
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(horizontal: 40),
-              //     child: Text('DAFTAR',style: TextStyle(color: BaseColor.lightBlue),),
-              //   ),
-              // ),
             ],
           ),
         ),

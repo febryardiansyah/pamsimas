@@ -324,7 +324,7 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                         margin: EdgeInsets.only(right: 8),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: _selectedStatus == e?BaseColor.lightBlue:BaseColor.grey)
+                          border: Border.all(color: _selectedStatus == e?BaseColor.primary:BaseColor.grey)
                         ),
                       ),
                     )).toList(),
@@ -358,7 +358,7 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                           margin: EdgeInsets.only(right: 8),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: _selectedCategory == e?BaseColor.lightBlue:BaseColor.grey)
+                              border: Border.all(color: _selectedCategory == e?BaseColor.primary:BaseColor.grey)
                           ),
                         ),
                       );

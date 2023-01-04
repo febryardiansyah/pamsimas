@@ -131,7 +131,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                                 title: Text('Input Meteran lalu'),
                                 subtitle: Text('Masukan meteran bulan sebelumnya manual'),
                                 value: _isLastBillManual,
-                                activeColor: BaseColor.lightBlue,
+                                activeColor: BaseColor.primary,
                                 onChanged: (val){
                                   setState(() {
                                     _isLastBillManual = val;

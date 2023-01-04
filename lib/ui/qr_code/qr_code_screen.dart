@@ -20,7 +20,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: BaseColor.lightBlue,
+        backgroundColor: BaseColor.primary,
         title: Text('Qr Code'),
         elevation: 0,
       ),

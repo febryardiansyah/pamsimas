@@ -21,7 +21,7 @@ class BuildCategory extends StatelessWidget {
         _color = BaseColor.orange;
         break;
       case 'P':
-        _color = BaseColor.lightBlue;
+        _color = BaseColor.primary;
         break;
       case 'B':
         _color = BaseColor.red;

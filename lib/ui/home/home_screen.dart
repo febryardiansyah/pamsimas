@@ -59,10 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: ()=>Navigator.pushNamed(context, rCheckData),
         title: 'Cek Data',color: Colors.lightBlue,icon: BaseString.iData,
       ),
-      HomeModel(
-        onTap: ()=>Navigator.pushNamed(context, rReport),
-        title: 'Laporan',color: Colors.lightBlue,icon: BaseString.iReport,
-      ),
+      // HomeModel(
+      //   onTap: ()=>Navigator.pushNamed(context, rReport),
+      //   title: 'Laporan',color: Colors.lightBlue,icon: BaseString.iReport,
+      // ),
       HomeModel(
         onTap: ()=>Navigator.pushNamed(context, rAddCustomer),
         title: 'Tambah Pengguna',color: Colors.lightBlue,icon: BaseString.iAddUser,
@@ -100,11 +100,11 @@ class _HomeScreenState extends State<HomeScreen> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  BaseColor.lightBlue,
+                  BaseColor.primary,
                   BaseColor.white,
                 ],
-                begin: Alignment.bottomCenter,
-                end: Alignment.center
+                begin: Alignment.bottomRight,
+                end: Alignment.centerLeft,
               )
             ),
           ),
@@ -121,8 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(BaseString.iMainLogo,height: 40,width: 100,fit: BoxFit.contain,),
+                      Image.asset(BaseString.iMainLogo,width: 100,fit: BoxFit.contain,),
                       Spacer(),
                       IconButton(
                         onPressed: ()=>Navigator.pushNamed(context, rSettings),
@@ -198,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     padding: EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
-                                      color: BaseColor.lightBlue.withOpacity(0.5),
+                                      color: BaseColor.primary.withOpacity(0.5),
                                     ),
                                     child: Row(
                                       children: [
@@ -228,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: EdgeInsets.symmetric(horizontal: 8),
                               width: _size.width,
                               decoration: BoxDecoration(
-                                color: BaseColor.lightBlue,
+                                color: BaseColor.primary,
                                 borderRadius: BorderRadius.circular(8)
                               ),
                               child: Center(
@@ -259,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       return GestureDetector(
                         onTap: _item.onTap,
                         child: Card(
-                          elevation: 5,
+                          elevation: 0,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           child: Container(
                             decoration: BoxDecoration(
@@ -267,23 +268,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               gradient: LinearGradient(
                                 colors: [
                                   BaseColor.darkBlue,
-                                  BaseColor.lightBlue
+                                  BaseColor.primary
                                 ],
                                 begin: Alignment.bottomCenter,
                                 end: Alignment.topCenter
                               )
                             ),
-                            child: Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(20),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(_item.icon!,),
-                                    SizedBox(height: 8,),
-                                    Text(_item.title!,style: GoogleFonts.josefinSans(color: Colors.white,fontWeight: FontWeight.bold),textAlign: TextAlign.center,)
-                                  ],
-                                ),
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(_item.icon!,color: BaseColor.white,width: 50,height: 50),
+                                  SizedBox(height: 14,),
+                                  Text(_item.title!,style: GoogleFonts.josefinSans(color: Colors.white,fontWeight: FontWeight.bold),textAlign: TextAlign.center,)
+                                ],
                               ),
                             ),
                           ),

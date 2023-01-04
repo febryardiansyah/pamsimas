@@ -49,7 +49,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
         title: Text('Tambah pelanggan'),
         elevation: 0,
       ),
-      backgroundColor: BaseColor.lightBlue,
+      backgroundColor: BaseColor.primary,
       body: BlocListener<CreateUserCubit,CreateUserState>(
         listener: (context,state){
           if (state is CreateUserLoading) {

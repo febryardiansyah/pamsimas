@@ -31,11 +31,11 @@ class UserRepo{
   Future<ResponseModel> createNewUser({String? name,String? address,String? role,String? category})async{
     try{
       String _email = name!.replaceAll(' ', '').toLowerCase();
-      UserCredential _user = await _auth.createUserWithEmailAndPassword(email: '$_email@pampay.com', password: '123456',);
+      UserCredential _user = await _auth.createUserWithEmailAndPassword(email: '$_email@pamdes.com', password: '123456',);
       String _uid = _user.user!.uid.substring(0,7);
       await _fireStore.collection('users').doc(_uid).set({
         'name':name,'address':address,'password':'123456','role':role,'category':category,
-        'uid':_uid,'username':_email
+        'uid':_uid,'username':_email,'email': '$_email@pamdes.com',
       });
       return ResponseModel(
         status: true,msg: 'Berhasil ditambahkan',
@@ -143,6 +143,7 @@ class UserRepo{
   static Future<List<String>> getAddress({required String address})async{
     final _res = await FirebaseFirestore.instance.collection('address').doc(address).get();
     List<String>_data = List<String>.from(_res.data()!['value'].map((x)=>x));
+    print('ADDRESS $_data');
     return _data;
   }
 

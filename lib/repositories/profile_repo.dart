@@ -9,9 +9,11 @@ class ProfileRepo {
   Future<ResponseModel?> getMyProfile()async{
     try{
       String _token = await AuthRepo.getToken();
+      print('TOKEN $_token');
       String _parseToken = _token.length > 7 ? _token.substring(0,7):_token;
+      print('PARSE TOKEN $_parseToken');
       final _res = await _fireStore.collection('users').doc(_parseToken).get();
-      print(_res.data());
+      print('PROFILE DATA ${_res.data()}');
       return ResponseModel(status: true,msg: 'Success',data: _res.data());
     }on FirebaseException catch(e){
       print('err : ${e.code} || ${e.message}');

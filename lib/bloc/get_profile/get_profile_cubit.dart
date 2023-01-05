@@ -19,7 +19,7 @@ class GetProfileCubit extends Cubit<GetProfileState> {
         emit(GetProfileFailure(msg: _res.msg!));
       }
     }catch(e){
-      print(e);
+      print('Fetch profile failure: $e');
       emit(GetProfileFailure(msg: BaseString.errorMessage));
     }
   }

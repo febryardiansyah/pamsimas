@@ -31,8 +31,12 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
   _CategoryModel? _selectedCategory;
 
   Future<void> _setAddress() async {
-    _rtList = await UserRepo.getAddress(address: 'RT');
-    _rwList = await UserRepo.getAddress(address: 'RW');
+    List<String> rt = await UserRepo.getAddress(address: 'RT');
+    List<String> rw = await UserRepo.getAddress(address: 'RW');
+    setState(() {
+      _rtList = rt;
+      _rwList = rw;
+    });
   }
 
   @override

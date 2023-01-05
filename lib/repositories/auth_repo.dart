@@ -21,7 +21,7 @@ class AuthRepo {
     }
 
     try{
-      UserCredential _userCredential = await _auth.signInWithEmailAndPassword(email: '$email@pampay.com', password: password);
+      UserCredential _userCredential = await _auth.signInWithEmailAndPassword(email: '$email@pamdes.com', password: password);
       User _user = _userCredential.user!;
 
       print(_user.uid);
@@ -35,7 +35,7 @@ class AuthRepo {
 
   Future<ResponseModel> changePassword({required String email,required String oldPassword,required String newPassword})async{
     try{
-      AuthCredential _credential = EmailAuthProvider.credential(email: '$email@pampay.com', password: oldPassword);
+      AuthCredential _credential = EmailAuthProvider.credential(email: '$email@pamdes.com', password: oldPassword);
       User? _user = _auth.currentUser;
       await _user?.reauthenticateWithCredential(_credential);
       if (_user != null) {

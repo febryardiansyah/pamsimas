@@ -49,10 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: ()=>Navigator.pushNamed(context, rCheckBill),
         title: 'Cek Tagihan',color: Colors.lightBlue,icon: BaseString.iInvoice,
       ),
-      HomeModel(
-        onTap: ()=>Navigator.pushNamed(context, rHome),
-        title: 'Bantuan',color: Colors.lightBlue,icon: BaseString.iTelephone,
-      ),
+      // HomeModel(
+      //   onTap: ()=>Navigator.pushNamed(context, rHome),
+      //   title: 'Bantuan',color: Colors.lightBlue,icon: BaseString.iTelephone,
+      // ),
     ];
     _adminMenuList = [
       HomeModel(

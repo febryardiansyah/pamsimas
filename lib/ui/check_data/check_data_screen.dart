@@ -132,35 +132,37 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                                 filled: true,
                                 fillColor: BaseColor.grey.withOpacity(0.2),
                                 border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(
-                                        width: 1,
-                                        color:
-                                            BaseColor.grey.withOpacity(0.5))),
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: BaseColor.grey.withOpacity(0.5),
+                                  ),
+                                ),
                                 disabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(
-                                        width: 1,
-                                        color:
-                                            BaseColor.grey.withOpacity(0.5))),
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: BaseColor.grey.withOpacity(0.5),
+                                  ),
+                                ),
                                 enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(
-                                        width: 1,
-                                        color:
-                                            BaseColor.grey.withOpacity(0.5))),
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: BaseColor.grey.withOpacity(0.5),
+                                  ),
+                                ),
                                 focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(
-                                        width: 1,
-                                        color:
-                                            BaseColor.grey.withOpacity(0.5))),
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: BaseColor.grey.withOpacity(0.5),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 10,
-                          ),
+                          SizedBox(width: 10),
                           Expanded(
                             flex: 1,
                             child: GestureDetector(
@@ -172,9 +174,10 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                                 height: 60,
                                 padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                        width: 1, color: Colors.black)),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border:
+                                      Border.all(width: 1, color: Colors.black),
+                                ),
                                 child: Center(
                                   child: Icon(FontAwesomeIcons.qrcode),
                                 ),
@@ -191,9 +194,7 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                             'Status Bayar',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: _statusList
@@ -217,18 +218,22 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                                       },
                                       child: Container(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 8),
+                                          horizontal: 20,
+                                          vertical: 8,
+                                        ),
                                         child: Text(
                                           e,
                                         ),
                                         margin: EdgeInsets.only(right: 8),
                                         decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: _selectedStatus == e
-                                                    ? BaseColor.primary
-                                                    : BaseColor.grey)),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          border: Border.all(
+                                            color: _selectedStatus == e
+                                                ? BaseColor.primary
+                                                : BaseColor.grey,
+                                          ),
+                                        ),
                                       ),
                                     ))
                                 .toList(),
@@ -254,6 +259,11 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                                       Navigator.pushNamed(context, rUserData,
                                           arguments: _item.uid!);
                                     },
+                                    leading: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        'https://res.cloudinary.com/febryar/image/upload/v1598796112/no_avatar_weaizx.jpg',
+                                      ),
+                                    ),
                                     title: Text(
                                       _item.name!,
                                       style: TextStyle(
@@ -285,7 +295,8 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+        ),
         builder: (context) => StatefulBuilder(builder: (context, myState) {
               return Container(
                 padding: EdgeInsets.all(10),
@@ -296,7 +307,9 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                         Text(
                           'Filter',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
                         Spacer(),
                         ElevatedButton(
@@ -319,11 +332,13 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           style: ElevatedButton.styleFrom(
-                              elevation: 0,
-                              primary: BaseColor.green,
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))),
+                            elevation: 0,
+                            primary: BaseColor.green,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                         )
                       ],
                     ),
@@ -349,18 +364,19 @@ class _CheckDataScreenState extends State<CheckDataScreen> {
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 8),
-                                      child: Text(
-                                        e,
+                                        horizontal: 20,
+                                        vertical: 8,
                                       ),
+                                      child: Text(e),
                                       margin: EdgeInsets.only(right: 8),
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          border: Border.all(
-                                              color: _selectedStatus == e
-                                                  ? BaseColor.primary
-                                                  : BaseColor.grey)),
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                          color: _selectedStatus == e
+                                              ? BaseColor.primary
+                                              : BaseColor.grey,
+                                        ),
+                                      ),
                                     ),
                                   ))
                               .toList(),

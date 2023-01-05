@@ -49,6 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: ()=>Navigator.pushNamed(context, rCheckBill),
         title: 'Cek Tagihan',color: Colors.lightBlue,icon: BaseString.iInvoice,
       ),
+      HomeModel(
+        onTap: ()=>Navigator.pushNamed(context, rCheckBill),
+        title: 'Data pengguna',color: Colors.lightBlue,icon: BaseString.iInvoice,
+      ),
       // HomeModel(
       //   onTap: ()=>Navigator.pushNamed(context, rHome),
       //   title: 'Bantuan',color: Colors.lightBlue,icon: BaseString.iTelephone,
@@ -78,8 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
         title: 'Input Meteran',color: Colors.lightBlue,icon: BaseString.iMeter,
       ),
       HomeModel(
-        onTap: ()=>Navigator.pushNamed(context, rAddCustomer),
-        title: 'Tambah Pengguna',color: Colors.lightBlue,icon: BaseString.iAddUser,
+        onTap: ()=>Navigator.pushNamed(context, rCheckCustomers),
+        title: 'Cek Pelanggan Terdaftar',color: Colors.lightBlue,icon: BaseString.iPeople,
       ),
     ];
   }
@@ -98,14 +102,15 @@ class _HomeScreenState extends State<HomeScreen> {
             width: _size.width,
             height: _size.height,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  BaseColor.primary,
-                  BaseColor.white,
-                ],
-                begin: Alignment.bottomRight,
-                end: Alignment.centerLeft,
-              )
+              color: BaseColor.primary.withOpacity(0.1),
+              // gradient: LinearGradient(
+              //   colors: [
+              //     BaseColor.primary,
+              //     BaseColor.white,
+              //   ],
+              //   begin: Alignment.bottomRight,
+              //   end: Alignment.centerLeft,
+              // ),
             ),
           ),
           Padding(

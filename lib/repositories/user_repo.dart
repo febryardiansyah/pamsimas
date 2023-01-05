@@ -101,7 +101,7 @@ class UserRepo{
     return _res.docs.isNotEmpty;
   }
 
-  Future<ResponseModel> searchUser({required int limit,String? query,bool? status,String? category})async{
+  Future<ResponseModel> searchUser({required int limit,String? query,bool? status,String? category,String? role})async{
     try{
       String _query = query == null?'':query.length == 0?'':query[0].toUpperCase()+query.substring(1).toLowerCase();
       print(_query);
@@ -110,6 +110,7 @@ class UserRepo{
           .where('name',isGreaterThanOrEqualTo: _query)
           .where('bill.isPayed',isEqualTo: status)
           .where('category',isEqualTo: category)
+          .where('role',isEqualTo: role)
           .get();
       // print(_res.docs[0].data());
       return ResponseModel(

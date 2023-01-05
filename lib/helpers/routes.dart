@@ -4,6 +4,7 @@ import 'package:pamsimas/splash_screen.dart';
 import 'package:pamsimas/ui/check_bill/check_bill_screen.dart';
 import 'package:pamsimas/ui/check_bill/history_bill_screen.dart';
 import 'package:pamsimas/ui/check_bill/invoice_screen.dart';
+import 'package:pamsimas/ui/check_data/check_customers_screen.dart';
 import 'package:pamsimas/ui/check_data/check_data_screen.dart';
 import 'package:pamsimas/ui/check_data/download_all_qr_code.dart';
 import 'package:pamsimas/ui/check_data/download_all_user_account.dart';
@@ -89,6 +90,9 @@ Route? generateRoute(RouteSettings settings){
     case rDownloadAllUserAccount:
       _route = _pageRoute(settings: settings, body: DownloadAllUserAccount());
       break;
+    case rCheckCustomers:
+      _route = _pageRoute(settings: settings, body: CheckCustomerScreen());
+      break;
   }
   return _route;
 }
@@ -113,3 +117,4 @@ const String rUserAccount = '/userAccount';
 const String rDownloadUserAccount = '/downloadUserAccount';
 const String rDownloadAllQrCode = '/downloadAllQrCode';
 const String rDownloadAllUserAccount = '/downloadAllUserAccount';
+const String rCheckCustomers = '/checkCustomers';

@@ -10,11 +10,11 @@ class GetDataCubit extends Cubit<GetDataState> {
   GetDataCubit() : super(GetDataInitial());
   final _repo = UserRepo();
 
-  Future<void> fetchData({String? query,bool? status,String? category})async{
+  Future<void> fetchData({String? query,bool? status,String? category,String? role})async{
     emit(GetDataLoading());
     try{
       final _limit = 10;
-      final _res = await _repo.searchUser(limit: _limit,query: query,status: status,category: category);
+      final _res = await _repo.searchUser(limit: _limit,query: query,status: status,category: category,role: role);
       if (_res.status!) {
         final _data = List<UserModel>.from(_res.data.map((x)=>UserModel.fromMap(x.data())));
         emit(GetDataSuccess(data: _data,limit: _limit+10,hasReachedMax: false));
@@ -27,12 +27,12 @@ class GetDataCubit extends Cubit<GetDataState> {
     }
   }
 
-  Future<void> onLoading({String? query,bool? status,String? category})async{
+  Future<void> onLoading({String? query,bool? status,String? category,String? role})async{
     final _currentState = state;
     if (_currentState is GetDataSuccess) {
       try{
         final _limit = _currentState.limit!;
-        final _res = await _repo.searchUser(limit: _limit,query: query,status: status,category: category);
+        final _res = await _repo.searchUser(limit: _limit,query: query,status: status,category: category,role: role);
         if (_res.status!) {
           final _data = List<UserModel>.from(_res.data.map((x)=>UserModel.fromMap(x.data())));
           print('LENGTH =====> ${_data.length}');

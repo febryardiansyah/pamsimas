@@ -81,7 +81,7 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                                     Container(
                                       padding: EdgeInsets.all(8),
                                       height: 40,
-                                      child: Center(child: Text('TAGIHAN',style: TextStyle(fontWeight: FontWeight.bold,color: BaseColor.white),)),
+                                      child: Center(child: Text('Tagihan',style: TextStyle(fontWeight: FontWeight.bold,color: BaseColor.white),)),
                                       decoration: BoxDecoration(
                                           color: BaseColor.white.withOpacity(0.3),
                                           borderRadius: BorderRadius.circular(10)
@@ -96,18 +96,13 @@ class _CheckBillScreenState extends State<CheckBillScreen> {
                                 child: Container(
                                   padding: EdgeInsets.all(8),
                                   margin: EdgeInsets.symmetric(horizontal: 20),
-                                  child: Center(child: Text(_data.bill == null?'':Helper.formatCurrency(_data.bill!.currentBill!),style: TextStyle(color: BaseColor.white,fontSize: 30,fontWeight: FontWeight.bold),),),
+                                  child: Center(child: Text(_data.bill == null?'Belum ada tagihan':Helper.formatCurrency(_data.bill!.currentBill!),style: TextStyle(color: BaseColor.white,fontSize: 30,fontWeight: FontWeight.bold),),),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: BaseColor.white.withOpacity(0.3)
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 20,),
-                              Align(
-                                alignment: Alignment.center,
-                                child: Text('Silakan lakukan pembayaran di Waserda',style: TextStyle(color: BaseColor.white),),
-                              )
                             ],
                           )
                         ],

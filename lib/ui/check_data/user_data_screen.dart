@@ -106,7 +106,9 @@ class _UserDataScreenState extends State<UserDataScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    CircleAvatar(),
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage('https://res.cloudinary.com/febryar/image/upload/v1598796112/no_avatar_weaizx.jpg'),
+                                    ),
                                     SizedBox(width: 14,),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,9 +226,17 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                       onTap: (){
                                         print(i);
                                         if (i == 0) {
-                                          _showChangeStatus(true,_lastBillId,_item.currentBill!,_item.totalPaid!,i);
+                                          _showDialogConfirmation(
+                                            totalPaid: _item.currentBill!,currentBill: _item.currentBill!,
+                                            userCollection: true,index: i,id: _lastBillId,
+                                          );
+                                          // _showChangeStatus(true,_lastBillId,_item.currentBill!,_item.totalPaid!,i);
                                         } else {
-                                          _showChangeStatus(false,_item.id!,_item.currentBill!,_item.totalPaid!,i);
+                                          _showDialogConfirmation(
+                                            totalPaid: _item.currentBill!,currentBill: _item.currentBill!,
+                                            userCollection: false,index: i,id: _item.id!,
+                                          );
+                                          // _showChangeStatus(false,_item.id!,_item.currentBill!,_item.totalPaid!,i);
                                         }
                                       },
                                       data: _item,
@@ -299,30 +309,34 @@ class _UserDataScreenState extends State<UserDataScreen> {
   void _showDialogConfirmation({int? currentBill,int? totalPaid,bool? userCollection,String? id,int? index}){
     showDialog(context: context, builder: (context)=>AlertDialog(
       title: Text('Konfirmasi pembayaran'),
-      content: Text('${Helper.formatCurrency(int.parse(_totalPaidCtrl.text))}',style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+      content: Text('${Helper.formatCurrency(currentBill!)}',style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
       actions: [
         ElevatedButton(
-          child: Text('Input',style: GoogleFonts.roboto(color: BaseColor.white),),
+          child: Text('Konfirmasi',style: GoogleFonts.roboto(color: BaseColor.white),),
           onPressed: (){
             Navigator.pop(context);
-            int _res = totalPaid! + int.parse(_totalPaidCtrl.text);
-            print(currentBill);
-            if (_res > currentBill!) {
-              EasyLoading.showError('Melebihi batas');
-            } else if (currentBill == _res) {
-              context.read<UpdatePaymentStatusCubit>().updateStatus(
-                uid: widget.uid, status: true,userCollection: userCollection!,id: id == null?_lastBillId:id,
-                totalPaid:int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,index: index
-              );
-            } else {
-              context.read<UpdatePaymentStatusCubit>().updateStatus(
-                uid: widget.uid, status: false,userCollection: userCollection!,id: id == null?_lastBillId:id,
-                totalPaid: int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,index: index
-              );
-            }
+            // int _res = totalPaid! + int.parse(_totalPaidCtrl.text);
+            print('Current Bill $currentBill');
+            context.read<UpdatePaymentStatusCubit>().updateStatus(
+              uid: widget.uid, status: true,userCollection: userCollection!,id: id == null?_lastBillId:id,
+              totalPaid:currentBill,totalCurrentPaid: 0,index: index
+            );
+            // if (_res > currentBill!) {
+            //   EasyLoading.showError('Melebihi batas');
+            // } else if (currentBill == _res) {
+            //   context.read<UpdatePaymentStatusCubit>().updateStatus(
+            //     uid: widget.uid, status: true,userCollection: userCollection!,id: id == null?_lastBillId:id,
+            //     totalPaid:int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,index: index
+            //   );
+            // } else {
+            //   context.read<UpdatePaymentStatusCubit>().updateStatus(
+            //     uid: widget.uid, status: false,userCollection: userCollection!,id: id == null?_lastBillId:id,
+            //     totalPaid: int.parse(_totalPaidCtrl.text),totalCurrentPaid: totalPaid,index: index
+            //   );
+            // }
           },
           style: ElevatedButton.styleFrom(
-              primary: BaseColor.green,
+              primary: BaseColor.primary,
               padding: EdgeInsets.symmetric(horizontal: 30),
               elevation: 0
           ),
